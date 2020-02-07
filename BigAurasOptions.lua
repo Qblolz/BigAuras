@@ -59,6 +59,8 @@ function BigAuras:initializePanel()
 				set = function(option, value)
 					self.selectedUI_index = value
 					self.db.uiAnchor = option.options.args.listBaseUI.values[value]
+
+					self:CreateFrames()
 				end,
 				order = 1,
 			}
