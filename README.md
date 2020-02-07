@@ -4,3 +4,6 @@
 * BigDebuffs
 * LoseControl
 * PhotoRobot
+
+##### support me
+* https://streamlabs.com/qbjw/tip
