@@ -1,0 +1,46 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Script file="BigAuras.lua"/>
+	<Script file="BigAurasOptions.lua"/>
+
+	<Frame name="AuraFrameTemplate" virtual="true">
+		<Size>
+            <AbsDimension x="36" y="36"/>
+        </Size>
+		<Anchors>
+            <Anchors>
+                <Anchor point="CENTER"/>
+            </Anchors>
+        </Anchors>
+        <Layers>
+            <Layer level="BORDER">
+                <Texture name="$parentIcon" parentKey="Icon">
+                </Texture>
+            </Layer>
+        </Layers>
+		<HighlightTexture/>
+        <PushedTexture/>
+        <Frames>
+            <Cooldown parentKey="Cooldown" drawBling="false" drawEdge="false" inherits="CooldownFrameTemplate">
+				<Size x="48" y="48"/>
+                <Anchors>
+                    <Anchor point="CENTER" x="0" y="0"/>
+                </Anchors>
+				<SwipeTexture file="Interface\PlayerFrame\DK-Blood-Rune-CDFill"/>
+            </Cooldown>
+        </Frames>
+        <Scripts>
+            <OnUpdate>
+				OnUpdate( self, elapsed)
+            </OnUpdate>
+        </Scripts>
+    </Frame>
+    <Frame name="BigAuras">
+        <Scripts>
+			<OnLoad>
+				Mixin(self, BigAuras)
+				BigAuras:OnLoad( self )
+			</OnLoad>
+        </Scripts>
+    </Frame>
+	
+</Ui>

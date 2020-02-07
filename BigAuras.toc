@@ -1,0 +1,24 @@
+## Interface: 30300
+## Title: BigAuras
+## Author: Qblolz
+## Version: 1.00
+## Notes: Displays the duration of CC effects on unit frames
+## SavedVariablesPerCharacter: BigAurasDB
+
+
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\LibSharedMedia-3.0\lib.xml
+
+libs\LibAdiEvent-1.0\LibAdiEvent-1.0.lua
+libs\LibSimpleOptions-1.0\lib.xml
+
+libs\AceGUI-3.0\AceGUI-3.0.xml
+libs\AceGUI-3.0-SharedMediaWidgets\widget.xml
+
+libs\AceConfig-3.0\AceConfig-3.0.xml
+libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+
+
+BigAuras.xml
