@@ -216,6 +216,13 @@ function BigAuras:InitializeCategorySpells(point, option, value)
 						name = label,
 						type = 'toggle',
 						get = function()
+							if not self.db.anchorsConfiguration[point].spells[spellID] then
+								self.db.anchorsConfiguration[point].spells[spellID] = {
+									categoryPriority = categoryData.priority,
+									spellPriority = categoryData.spells[spellID]
+								}
+							end
+
 							if self.db.anchorsConfiguration[point].spells[spellID]["spellPriority"] ~= 0 then
 								return true
 							else

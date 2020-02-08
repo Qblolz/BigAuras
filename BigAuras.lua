@@ -290,6 +290,7 @@ function BigAuras:OnLoad( self )
 				[58597] = 50, -- Sacred Shield
 				[53651] = 50, -- Beacon of Light
 				[498] = 50, -- Divine Protection
+				[871] = 50, -- ShieldWall
 				[64205] = 50, -- Divine Sacrifice
 				[1044] = 50, -- Hand of Freedom
 				[6940] = 50, -- Hand of Sacrifice
