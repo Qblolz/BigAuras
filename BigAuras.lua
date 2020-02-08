@@ -191,6 +191,7 @@ function BigAuras:OnLoad( self )
 				[49802] = 175,	-- Maim
 				[49803] = 175,	-- Pounce
 				[14309] = 175,	-- Freezing Trap Effect
+				[60210] = 175,  -- Freezing Trap Effect v2
 				[24394] = 175,	-- Intimidation
 				[14327] = 175,	-- Scare Beast (works against Druids in most forms and Shamans using Ghost Wolf)
 				[19503] = 175,	-- Scatter Shot
