@@ -601,145 +601,148 @@ function BigAuras:CreateFrames()
 
 			if self.db.anchorsConfiguration[point].unlock or not portraitFrame then
 				self.frames[point] = CreateFrame("Frame", "aura-" .. point, UIParent, "AuraFrameTemplate")
-			else
+			elseif portraitFrame then
 				self.frames[point] = CreateFrame("Frame", "aura-" .. point, portraitFrame:GetParent(), "AuraFrameTemplate")
 			end
 
-			local _frame = self.frames[point]
+			if self.frames[point] then
+
+				local _frame = self.frames[point]
 				
-			_frame.showingSpellID = nil
-			_frame.showingSpellPriority = nil
-			_frame.showingCategoryPriority = nil
-			_frame.showingSpellDuration = nil
-			_frame.showingSpellExpirationTime = nil
+				_frame.showingSpellID = nil
+				_frame.showingSpellPriority = nil
+				_frame.showingCategoryPriority = nil
+				_frame.showingSpellDuration = nil
+				_frame.showingSpellExpirationTime = nil
 
-			_frame.configuration = self.db.anchorsConfiguration[point]
-			_frame.auraTrackerStorage = {}
-			_frame.point = point
+				_frame.configuration = self.db.anchorsConfiguration[point]
+				_frame.auraTrackerStorage = {}
+				_frame.point = point
 				
-			if _frame.configuration.unlock then
-				_frame:ClearAllPoints()
-				_frame:SetPoint(
-					"CENTER",
-					UIParent,
-					"CENTER",
-					_frame.configuration.offsetX,
-					_frame.configuration.offsetY
-				)
-				_frame:SetWidth(_frame.configuration.size)
-				_frame:SetHeight(_frame.configuration.size)
-				_frame:SetAlpha(_frame.configuration.alpha)
-			elseif portraitFrame then
+				if _frame.configuration.unlock then
+					_frame:ClearAllPoints()
+					_frame:SetPoint(
+						"CENTER",
+						UIParent,
+						"CENTER",
+						_frame.configuration.offsetX,
+						_frame.configuration.offsetY
+					)
+					_frame:SetWidth(_frame.configuration.size)
+					_frame:SetHeight(_frame.configuration.size)
+					_frame:SetAlpha(_frame.configuration.alpha)
+				elseif portraitFrame then
 
-				if parent then
-					_frame:SetParent(parent)
+					if parent then
+						_frame:SetParent(parent)
+					end
+
+					if self.db.uiAnchor == "Blizzard" then
+						portraitFrame:SetDrawLayer("BACKGROUND")
+						_frame:SetFrameLevel(portraitFrame:GetParent():GetFrameLevel())
+					else
+						_frame:SetFrameLevel(90)
+					end
+
+
+					_frame:SetWidth(portraitFrame:GetWidth())
+					_frame:SetHeight(portraitFrame:GetHeight())
+					_frame:SetScale(portraitFrame:GetParent():GetScale())
+					if noPortait and uiData.alignLeft then
+						_frame:SetPoint("TOPRIGHT", portraitFrame, "TOPLEFT")
+					else
+						_frame:SetAllPoints(portraitFrame)
+					end
+
+					_frame.Cooldown:SetWidth(portraitFrame:GetWidth())
+					_frame.Cooldown:SetHeight(portraitFrame:GetHeight())
 				end
 
-				if self.db.uiAnchor == "Blizzard" then
-					portraitFrame:SetDrawLayer("BACKGROUND")
-					_frame:SetFrameLevel(portraitFrame:GetParent():GetFrameLevel())
-				else
-					_frame:SetFrameLevel(90)
-				end
+				function _frame:ShownSwipe(anchor)
 
-
-				_frame:SetWidth(portraitFrame:GetWidth())
-				_frame:SetHeight(portraitFrame:GetHeight())
-				_frame:SetScale(portraitFrame:GetParent():GetScale())
-				if noPortait and uiData.alignLeft then
-					_frame:SetPoint("TOPRIGHT", portraitFrame, "TOPLEFT")
-				else
-					_frame:SetAllPoints(portraitFrame)
-				end
-
-				_frame.Cooldown:SetWidth(portraitFrame:GetWidth())
-				_frame.Cooldown:SetHeight(portraitFrame:GetHeight())
-			end
-
-			function _frame:ShownSwipe(anchor)
-
-				if anchor then
-					if self.configuration.showSwipe then
-						if BigAuras.db.uiAnchor == "Blizzard" then
-							self.Cooldown:SetFrameLevel(anchor:GetParent():GetFrameLevel())
+					if anchor then
+						if self.configuration.showSwipe then
+							if BigAuras.db.uiAnchor == "Blizzard" then
+								self.Cooldown:SetFrameLevel(anchor:GetParent():GetFrameLevel())
+							else
+								self.Cooldown:SetFrameLevel(90)
+							end
 						else
-							self.Cooldown:SetFrameLevel(90)
+							self.Cooldown:SetFrameLevel(anchor:GetParent():GetFrameLevel() - 1)
 						end
 					else
-						self.Cooldown:SetFrameLevel(anchor:GetParent():GetFrameLevel() - 1)
-					end
-				else
-					if self.configuration.showSwipe then
-						if BigAuras.db.uiAnchor == "Blizzard" then
-							self.Cooldown:SetFrameLevel(self:GetFrameLevel())
+						if self.configuration.showSwipe then
+							if BigAuras.db.uiAnchor == "Blizzard" then
+								self.Cooldown:SetFrameLevel(self:GetFrameLevel())
+							else
+								self.Cooldown:SetFrameLevel(90)
+							end
 						else
-							self.Cooldown:SetFrameLevel(90)
+							self.Cooldown:SetFrameLevel(self:GetFrameLevel() - 1)
 						end
+					end
+				end
+
+
+				_frame:ShownSwipe(portraitFrame)
+
+				function _frame:CollectSpells()
+					for key, categoryData  in pairs(BigAuras.categories) do
+						for spellId, spellPriority in pairs(categoryData.spells) do
+							self:AddSpell(categoryData,spellId)
+						end
+					end
+				end
+
+				function _frame:AddSpell( categoryData, spellId )
+					if categoryData then
+						local spellPriority = categoryData.spells[spellId]
+
+						self.configuration.spells[spellId] = {
+							categoryPriority = categoryData.priority,
+							spellPriority = spellPriority
+						}
+					end
+				end
+
+				function _frame:RemoveSpell( spellId )
+					table.remove(self.configuration.spells, spellId)
+				end
+
+				if _frame.configuration.spells == nil then
+					_frame.configuration.spells = {}
+					_frame:CollectSpells()
+				end
+
+				function _frame:clearShowingIndicators()
+					self.showingSpellID = nil
+					self.showingSpellPriority = nil
+					self.showingCategoryPriority = nil
+					self.showingSpellDuration = nil
+					self.showingSpellExpirationTime = nil
+				end
+
+				function _frame:RemoveAura()
+					if self.Icon:IsShown() then
+						self.Cooldown:Hide()
+						self.Icon:Hide()
+					end
+				end
+
+				function _frame:AddAura ( spellID, icon, duration, expirationTime )
+					if not self.Icon:IsShown() then
+						self.Icon:Show()
+					end
+
+					if self.configuration.unlock or BigAuras.db.uiAnchor ~= "Blizzard" then
+						self.Icon:SetTexture(icon)
 					else
-						self.Cooldown:SetFrameLevel(self:GetFrameLevel() - 1)
+						SetPortraitToTexture(self.Icon, icon)
 					end
+
+					CooldownFrame_SetTimer(self.Cooldown, expirationTime - duration, duration, 1 )
+					self.Cooldown:SetAllPoints(self.Icon)
 				end
-			end
-
-
-			_frame:ShownSwipe(portraitFrame)
-
-			function _frame:CollectSpells()
-				for key, categoryData  in pairs(BigAuras.categories) do
-					for spellId, spellPriority in pairs(categoryData.spells) do
-						self:AddSpell(categoryData,spellId)
-					end
-				end
-			end
-
-			function _frame:AddSpell( categoryData, spellId )
-				if categoryData then
-					local spellPriority = categoryData.spells[spellId]
-
-					self.configuration.spells[spellId] = {
-						categoryPriority = categoryData.priority,
-						spellPriority = spellPriority
-					}
-				end
-			end
-
-			function _frame:RemoveSpell( spellId )
-				table.remove(self.configuration.spells, spellId)
-			end
-
-			if _frame.configuration.spells == nil then
-				_frame.configuration.spells = {}
-				_frame:CollectSpells()
-			end
-
-			function _frame:clearShowingIndicators()
-				self.showingSpellID = nil
-				self.showingSpellPriority = nil
-				self.showingCategoryPriority = nil
-				self.showingSpellDuration = nil
-				self.showingSpellExpirationTime = nil
-			end
-
-			function _frame:RemoveAura()
-				if self.Icon:IsShown() then
-					self.Cooldown:Hide()
-					self.Icon:Hide()
-				end
-			end
-
-			function _frame:AddAura ( spellID, icon, duration, expirationTime )
-				if not self.Icon:IsShown() then
-					self.Icon:Show()
-				end
-
-				if self.configuration.unlock or BigAuras.db.uiAnchor ~= "Blizzard" then
-					self.Icon:SetTexture(icon)
-				else
-					SetPortraitToTexture(self.Icon, icon)
-				end
-
-				CooldownFrame_SetTimer(self.Cooldown, expirationTime - duration, duration, 1 )
-				self.Cooldown:SetAllPoints(self.Icon)
 			end
 		end
     end
