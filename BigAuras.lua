@@ -255,7 +255,9 @@ function BigAuras:OnLoad( self )
 				[18425] = 175,	-- Silenced - Improved Kick
 				[24259] = 175,	-- Spell Lock (Felhunter)
 				[18498] = 175,	-- Silenced - Gag Order
-				[25046] = 175,	-- Arcane Torrent
+				[25046] = 175,	-- Arcane Torrent (15 energy)
+				[50613] = 175,  -- Arcane Torrent (15 runes)
+				[28730] = 175,  -- Arcane Torrent (6% mana)
 			}
 		},
 		{
