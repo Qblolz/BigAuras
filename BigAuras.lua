@@ -773,7 +773,6 @@ function BigAuras:CreateFrames()
 					_frame:CollectSpells()
 				end
 
-				print(_frame.configuration.categorie)
 				if _frame.configuration.categories == nil then
 					_frame.configuration.categories = {}
 					_frame:CollectCategories()
