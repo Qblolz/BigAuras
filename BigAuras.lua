@@ -63,6 +63,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			pet = {
@@ -72,6 +73,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			target = {
@@ -81,6 +83,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			focus = {
@@ -90,6 +93,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			party1 = {
@@ -99,6 +103,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			party2 = {
@@ -108,6 +113,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			party3 = {
@@ -117,6 +123,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			party4 = {
@@ -126,6 +133,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			arena1 = {
@@ -135,6 +143,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			arena2 = {
@@ -144,6 +153,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			arena3 = {
@@ -153,6 +163,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			arena4 = {
@@ -162,6 +173,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			},
 			arena5 = {
@@ -171,6 +183,7 @@ function BigAuras:OnLoad( self )
 				alpha = 1,
 				unlock = false,
 				showSwipe = true,
+				categories = nil,
 				spells = nil,
 			}
 		},
@@ -390,6 +403,22 @@ function BigAuras:OnLoad( self )
 				[13099] = 100,	-- Net-o-Matic
 			}
 		},
+		--[[{
+			name = "Interrupts",
+			priority = 170,
+			showSpells = false,
+			spells = {
+				[6552] = 4,   -- [Warrior] Pummel
+				[1766] = 5,   -- [Rogue] Kick
+				[47528] = 4,  -- [DK] Mind Freeze
+				[57994] = 2,  -- [Shaman] Wind Shear
+				[19647] = 6,  -- [Warlock] Spell Lock
+				[72] = 6,	  -- [Warrior] Shield Bash
+				[132409] = 6, -- [Warlock] Spell Lock
+				[2139] = 6,   -- [Mage] Counterspell
+				[16979] = 4,  -- [Feral] Feral Charge (Bear)
+			}
+		},]]
 	}
 
 	self.uiAnchors = {
@@ -619,20 +648,27 @@ function BigAuras:CreateFrames()
 
 				_frame.configuration = self.db.anchorsConfiguration[point]
 				_frame.auraTrackerStorage = {}
+				_frame.anchor = anchor
 				_frame.point = point
-				
+
+				function _frame:SetAllFromConfiguration()
+					self:ClearAllPoints()
+					self:SetPoint(
+						"TOPLEFT",
+						UIParent,
+						"TOPLEFT",
+						self.configuration.offsetX,
+						self.configuration.offsetY
+					)
+					self:SetWidth(self.configuration.size)
+					self:SetHeight(self.configuration.size)
+					self:SetAlpha(self.configuration.alpha)
+				end
+
 				if _frame.configuration.unlock then
 					_frame:ClearAllPoints()
-					_frame:SetPoint(
-						"CENTER",
-						UIParent,
-						"CENTER",
-						_frame.configuration.offsetX,
-						_frame.configuration.offsetY
-					)
-					_frame:SetWidth(_frame.configuration.size)
-					_frame:SetHeight(_frame.configuration.size)
-					_frame:SetAlpha(_frame.configuration.alpha)
+					_frame:SetAllFromConfiguration()
+					
 				elseif portraitFrame then
 
 					if parent then
@@ -645,7 +681,6 @@ function BigAuras:CreateFrames()
 					else
 						_frame:SetFrameLevel(90)
 					end
-
 
 					_frame:SetWidth(portraitFrame:GetWidth())
 					_frame:SetHeight(portraitFrame:GetHeight())
@@ -685,14 +720,36 @@ function BigAuras:CreateFrames()
 					end
 				end
 
-
 				_frame:ShownSwipe(portraitFrame)
 
 				function _frame:CollectSpells()
 					for key, categoryData  in pairs(BigAuras.categories) do
-						for spellId, spellPriority in pairs(categoryData.spells) do
-							self:AddSpell(categoryData,spellId)
+						if categoryData.showSpells then
+							for spellId, spellPriority in pairs(categoryData.spells) do
+								self:AddSpell(categoryData,spellId)
+							end
 						end
+					end
+				end
+
+				function _frame:CollectCategories()
+					for key, categoryData  in pairs(BigAuras.categories) do
+						self:AddCategory(categoryData.name, categoryData.priority, true, nil)
+					end
+				end
+
+				function _frame:AddCategory( name, priority, enabled, key )
+
+					local _category = {
+						name = name,
+						priority = priority,
+						enabled = enabled,
+					}
+
+					if key then
+						self.configuration[key] = _category
+					else
+						tinsert(self.configuration.categories, _category)
 					end
 				end
 
@@ -714,6 +771,12 @@ function BigAuras:CreateFrames()
 				if _frame.configuration.spells == nil then
 					_frame.configuration.spells = {}
 					_frame:CollectSpells()
+				end
+
+				print(_frame.configuration.categorie)
+				if _frame.configuration.categories == nil then
+					_frame.configuration.categories = {}
+					_frame:CollectCategories()
 				end
 
 				function _frame:clearShowingIndicators()
@@ -745,9 +808,63 @@ function BigAuras:CreateFrames()
 					CooldownFrame_SetTimer(self.Cooldown, expirationTime - duration, duration, 1 )
 					self.Cooldown:SetAllPoints(self.Icon)
 				end
+
+				if self.db.testMode == true then
+					local icon = "Interface\\Icons\\inv_jewelry_trinketpvp_01"
+					if not _frame.Icon:IsShown() then
+						_frame.Icon:Show()
+					end
+					if _frame.configuration.unlock or self.db.uiAnchor ~= 'Blizzard' then
+						_frame.Icon:SetTexture(icon)
+					else
+						SetPortraitToTexture(_frame.Icon, icon)
+					end
+
+					_frame.Cooldown:SetCooldown(GetTime(),120,1)
+
+					_frame:SetMovable(false)
+					_frame:RegisterForDrag()
+					_frame:EnableMouse(false)
+					self.db.anchorsConfiguration[point].dragable = false
+				else
+					self.db.anchorsConfiguration[point].dragable = false
+					_frame:RemoveAura()
+				end
+
 			end
 		end
     end
+end
+
+function BigAuras:OnInterrupt( ... )
+	local subEvent = select(2, ...)
+
+	if subEvent ~= "SPELL_CAST_SUCCESS" and subEvent ~= "SPELL_INTERRUPT" then
+		return
+	end
+
+	local destName = select(7, ...)
+	local spellId = select(9, ...)
+
+	for _, frame in pairs(self.frames) do
+		local frameUnitName = UnitName(frame.point)
+		
+		local _, _, _, _, _, _, _, notInterruptibleCasting, _ = UnitCastingInfo(frame.point)
+		local _, _, _, _, _, _, notInterruptibleChanneling, _ = UnitChannelInfo(frame.point)
+
+		if 
+			frameUnitName == destName and
+			(
+				notInterruptibleCasting == false
+				or
+				notInterruptibleChanneling == false
+			)
+		then
+			
+
+
+		end
+	end
 end
 
 function OnUpdate( self, elapsed )
@@ -764,7 +881,7 @@ function OnUpdate( self, elapsed )
 					spellPriority = spellData.spellPriority
 				end
 				
-                if spellPriority and spellPriority ~= 0 and categoryPriority then
+                if spellPriority and spellPriority ~= 0 and categoryPriority and categoryPriority > 0 then
 					local hasAura = self.auraTrackerStorage[spellID] and self.auraTrackerStorage[spellID].status
 
 					self.auraTrackerStorage[spellID] = {
@@ -785,12 +902,13 @@ function OnUpdate( self, elapsed )
 						(
 							self.showingSpellID and
 							(
+								self.showingCategoryPriority < categoryPriority
+								or
 								(
 									self.showingCategoryPriority == categoryPriority and
 									self.showingSpellPriority < spellPriority
 								)
-								or
-								self.showingCategoryPriority < categoryPriority
+								
 							)
 						) or
 						(
