@@ -285,7 +285,7 @@ function BigAuras:AddframeSettings( point )
 			copyFrom = {
 				name = 'copy ALL from...',
 				type = 'select',
-				desc = 'Copy configuration for spells from another anchor... be careful !!!11',
+				desc = 'Copy configuration for anchor from another anchor... be careful !!!11',
 				values = anchors,
 				get = function(option)
 					return copyFromSelected
