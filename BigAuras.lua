@@ -401,6 +401,7 @@ function BigAuras:OnLoad( self )
 				[39965] = 100,	-- Frost Grenade
 				[55536] = 100,	-- Frostweave Net
 				[13099] = 100,	-- Net-o-Matic
+				[308725] = 100, -- Vulpera root (after 308726 (stun)) - Sirus.su
 			}
 		},
 		--[[{
@@ -678,8 +679,13 @@ function BigAuras:CreateFrames()
 					if self.db.uiAnchor == "Blizzard" then
 						portraitFrame:SetDrawLayer("BACKGROUND")
 						_frame:SetFrameLevel(portraitFrame:GetParent():GetFrameLevel())
+
+						_frame.Cooldown:SetWidth(portraitFrame:GetWidth() * 0.7)
+						_frame.Cooldown:SetHeight(portraitFrame:GetHeight() * 0.7)
 					else
 						_frame:SetFrameLevel(90)
+						_frame.Cooldown:SetWidth(portraitFrame:GetWidth())
+						_frame.Cooldown:SetHeight(portraitFrame:GetHeight())
 					end
 
 					_frame:SetWidth(portraitFrame:GetWidth())
@@ -691,8 +697,7 @@ function BigAuras:CreateFrames()
 						_frame:SetAllPoints(portraitFrame)
 					end
 
-					_frame.Cooldown:SetWidth(portraitFrame:GetWidth())
-					_frame.Cooldown:SetHeight(portraitFrame:GetHeight())
+					
 				end
 
 				function _frame:ShownSwipe(anchor)
