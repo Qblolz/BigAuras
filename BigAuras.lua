@@ -680,8 +680,10 @@ function BigAuras:CreateFrames()
 						portraitFrame:SetDrawLayer("BACKGROUND")
 						_frame:SetFrameLevel(portraitFrame:GetParent():GetFrameLevel())
 
-						_frame.Cooldown:SetWidth(portraitFrame:GetWidth() * 0.7)
-						_frame.Cooldown:SetHeight(portraitFrame:GetHeight() * 0.7)
+						_frame.Cooldown:SetWidth(portraitFrame:GetWidth())
+						_frame.Cooldown:SetHeight(portraitFrame:GetHeight())
+
+						_frame.drawlayer = portraitFrame:GetDrawLayer()
 					else
 						_frame:SetFrameLevel(90)
 						_frame.Cooldown:SetWidth(portraitFrame:GetWidth())
