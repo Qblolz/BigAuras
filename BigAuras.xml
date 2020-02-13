@@ -20,7 +20,7 @@
 		<HighlightTexture/>
         <PushedTexture/>
         <Frames>
-            <Cooldown parentKey="Cooldown" drawBling="false" drawEdge="false" inherits="CooldownFrameTemplate">
+            <Cooldown parentKey="Cooldown" drawBling="false" drawEdge="false" reverse="true" inherits="CooldownFrameTemplate">
 				<Size x="36" y="36"/>
                 <Anchors>
                     <Anchor point="CENTER" x="0" y="0"/>
