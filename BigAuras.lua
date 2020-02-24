@@ -304,7 +304,8 @@ function BigAuras:OnLoad( self )
 				[43012] = 50, -- Frost Ward
 				[43010] = 50, -- Fire Ward
 				[58597] = 50, -- Sacred Shield
-				[53651] = 50, -- Beacon of Light
+				[53563] = 10, -- Beacon of Light
+				[54428] = 50, -- Divine Plea
 				[498] = 50, -- Divine Protection
 				[871] = 50, -- ShieldWall
 				[64205] = 50, -- Divine Sacrifice
@@ -353,7 +354,10 @@ function BigAuras:OnLoad( self )
 			name = "Buffs other",
 			priority = 10,
 			spells = {
-				[308876]   = 40, -- Necrotic trinket (sirus.su)
+				[308876]   = 40, -- Necrotic trinket (245 ilvl) (sirus.su)
+				[308877]   = 40, -- Necrotic trinket (264 ilvl) (sirus.su)
+				[308878]   = 40, -- Necrotic trinket (274 ilvl) (sirus.su)
+				[308879]   = 40, -- Necrotic trinket (284 ilvl) (sirus.su)
 			}
 		},
 		{
