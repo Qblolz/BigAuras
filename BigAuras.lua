@@ -278,6 +278,7 @@ function BigAuras:OnLoad( self )
 			priority = 50,
 			spells = {
 				[66] = 50,    -- Invisibility(mage)
+				[32612] = 50, -- Invisibility (buff) (mage)
 				[18708] = 50, -- Fel Domination
 				[12975] = 50, -- Last Stand
 				[48792] = 50, -- Ice bound
