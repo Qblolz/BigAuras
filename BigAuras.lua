@@ -842,6 +842,8 @@ function BigAuras:CreateFrames()
 					_frame:RemoveAura()
 				end
 
+				--_frame:SetScript("OnEvent", OnUpdate)
+				--_frame:RegisterEvent("UNIT_AURA")
 			end
 		end
     end
@@ -879,7 +881,7 @@ function BigAuras:OnInterrupt( ... )
 end
 
 function OnUpdate( self, elapsed )
-    for _, auraFilter in pairs({"HELPFUL", "HARMFUL"}) do
+    for _, auraFilter in pairs({"HARMFUL", "HELPFUL"}) do
         for auraIndex = 1, 40 do
             local _, _, icon, _, _, duration, expirationTime, _, _, _, spellID, _, _, _, _, _ = UnitAura(self.point, auraIndex, auraFilter)
             if spellID then
@@ -919,8 +921,12 @@ function OnUpdate( self, elapsed )
 									self.showingCategoryPriority == categoryPriority and
 									self.showingSpellPriority < spellPriority
 								)
-								
 							)
+						) or
+						(
+							self.showingSpellID and
+							self.showingSpellID == spellID and
+							self.showingSpellExpirationTime > expirationTime
 						) or
 						(
 							self.showingSpellID and
@@ -934,7 +940,6 @@ function OnUpdate( self, elapsed )
 						self.showingCategoryPriority = categoryPriority
 						self.showingSpellDuration = duration
 						self.showingSpellExpirationTime = expirationTime
-						
                         self:AddAura( spellID, icon, duration, expirationTime )
                     end
                 end
