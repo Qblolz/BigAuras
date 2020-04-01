@@ -736,11 +736,11 @@ function BigAuras:CreateFrames()
 
 				function _frame:CollectSpells()
 					for key, categoryData  in pairs(BigAuras.categories) do
-						if categoryData.showSpells then
+						--if categoryData.showSpells then
 							for spellId, spellPriority in pairs(categoryData.spells) do
 								self:AddSpell(categoryData,spellId)
 							end
-						end
+						--end
 					end
 				end
 
