@@ -197,8 +197,8 @@ function BigAuras:OnLoad( self )
 				[49012] = 175,	-- Wyvern Sting
 				[47481] = 175,	-- Gnaw (Ghoul)
 				[51209] = 175,	-- Hungering Cold
-				[5211] = 175,	-- Bash (also Shaman Spirit Wolf ability)
-				[8983] = 175,	-- Bash (also Shaman Spirit Wolf ability)
+				[8983] = 175,	-- Druid feral bash
+				[58861] = 175,  -- Bash (also Shaman Spirit Wolf ability)
 				[33786] = 175,	-- Cyclone
 				[18658] = 175,	-- Hibernate (works against Druids in most forms and Shamans using Ghost Wolf)
 				[49802] = 175,	-- Maim
