@@ -38,7 +38,7 @@ local GetAnchor = {
 	end
 }
 
-function OnEvent (self, event)
+function BigAuras_OnEvent (self, event)
 	if event == "VARIABLES_LOADED" then
 		self:initializeDB()
 		self:CreateFrames()
@@ -46,11 +46,15 @@ function OnEvent (self, event)
 	end
 end
 
+function BigAuras:formatTime(s)
+	return format("%.1f", s)
+end
+
 function BigAuras:OnLoad( self )
 	BigAuras = self
 	
 	self:RegisterEvent("VARIABLES_LOADED")
-	self:SetScript("OnEvent", OnEvent)
+	self:SetScript("OnEvent", BigAuras_OnEvent)
 
 	self.default = {
         version = 2.0,
@@ -325,6 +329,9 @@ function BigAuras:OnLoad( self )
 			name = "Buffs offensive",
 			priority = 40,
 			spells = {
+				[47241] = 40,  -- Metamorphosis
+				[51690] = 40,  -- Killing Spree
+				[31884] = 40,  -- Avenging Wrath
 				[2825] = 40,  -- Bloodlust
 				[32182] = 40,  -- Heroism
 				[1719] = 40, -- Recklessness
@@ -646,6 +653,9 @@ function BigAuras:CreateFrames()
 
 				local _frame = self.frames[point]
 				
+				local font, size = _frame.Text:GetFont()
+				_frame.Text:SetFont(font, size, "OUTLINE")
+				
 				_frame.showingSpellID = nil
 				_frame.showingSpellPriority = nil
 				_frame.showingCategoryPriority = nil
@@ -703,8 +713,6 @@ function BigAuras:CreateFrames()
 					else
 						_frame:SetAllPoints(portraitFrame)
 					end
-
-					
 				end
 
 				function _frame:ShownSwipe(anchor)
@@ -802,6 +810,7 @@ function BigAuras:CreateFrames()
 					if self.Icon:IsShown() then
 						self.Cooldown:Hide()
 						self.Icon:Hide()
+						self.Text:Hide()
 					end
 				end
 
@@ -815,9 +824,30 @@ function BigAuras:CreateFrames()
 					else
 						SetPortraitToTexture(self.Icon, icon)
 					end
-
-					CooldownFrame_SetTimer(self.Cooldown, expirationTime - duration, duration, 1 )
-					self.Cooldown:SetAllPoints(self.Icon)
+					
+					if self.configuration.showSwipe then
+						self.Text:Hide()
+						self.Cooldown:Show()
+						CooldownFrame_SetTimer(self.Cooldown, expirationTime - duration, duration, 1 )
+						self.Cooldown:SetAllPoints(self.Icon)
+						self:SetScript("OnUpdate", nil)
+					else
+						self.Text:Show()
+						self.Cooldown:Hide()
+						self.total = 0.01
+					end
+				end
+				
+				function _frame:UpdateTimer(self, elapsed)
+					self.total = self.total + elapsed
+					if self.total >= 0.01 then
+						if self.showingSpellExpirationTime - GetTime() > 0 and self:IsVisible() then
+							self.Text:SetText(BigAuras:formatTime(self.showingSpellExpirationTime-GetTime()))
+							self.total = 0
+						else
+							self.Text.Hide()
+						end
+					end
 				end
 
 				if self.db.testMode == true then
@@ -841,9 +871,6 @@ function BigAuras:CreateFrames()
 					self.db.anchorsConfiguration[point].dragable = false
 					_frame:RemoveAura()
 				end
-
-				--_frame:SetScript("OnEvent", OnUpdate)
-				--_frame:RegisterEvent("UNIT_AURA")
 			end
 		end
     end
@@ -880,11 +907,13 @@ function BigAuras:OnInterrupt( ... )
 	end
 end
 
-function OnUpdate( self, elapsed )
-    for _, auraFilter in pairs({"HARMFUL", "HELPFUL"}) do
+local filters = {"HARMFUL", "HELPFUL"}
+
+function BigAuras_OnUpdate( self, elapsed )
+    for _, auraFilter in pairs(filters) do
         for auraIndex = 1, 40 do
-            local _, _, icon, _, _, duration, expirationTime, _, _, _, spellID, _, _, _, _, _ = UnitAura(self.point, auraIndex, auraFilter)
-            if spellID then
+            local name, _, icon, _, _, duration, expirationTime, _, _, _, spellID, _, _, _, _, _ = UnitAura(self.point, auraIndex, auraFilter)
+            if spellID or name then
 				local categoryPriority
 				local spellPriority
 
@@ -958,4 +987,8 @@ function OnUpdate( self, elapsed )
 			end
 		end
     end
+	
+	if not self.configuration.showSwipe and self.showingSpellID then
+		self:UpdateTimer(self,elapsed)
+	end
 end

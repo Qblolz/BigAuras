@@ -16,6 +16,11 @@
                 <Texture name="$parentIcon" parentKey="Icon">
                 </Texture>
             </Layer>
+			<Layer level="OVERLAY">
+                <FontString name="$parentText" parentKey="Text" inherits="GameFontNormalLarge">
+					<Color r="1" g="1" b="1" a="1"/>
+                </FontString>
+            </Layer>
         </Layers>
 		<HighlightTexture/>
         <PushedTexture/>
@@ -30,7 +35,7 @@
         </Frames>
         <Scripts>
             <OnUpdate>
-				OnUpdate( self, elapsed)
+				BigAuras_OnUpdate(self, elapsed)
             </OnUpdate>
         </Scripts>
     </Frame>
@@ -38,7 +43,7 @@
         <Scripts>
 			<OnLoad>
 				Mixin(self, BigAuras)
-				BigAuras:OnLoad( self )
+				BigAuras:OnLoad(self)
 			</OnLoad>
         </Scripts>
     </Frame>
