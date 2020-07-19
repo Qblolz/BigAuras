@@ -844,7 +844,7 @@ function BigAuras:CreateFrames()
 							self.Text:SetText(BigAuras:formatTime(self.showingSpellExpirationTime-GetTime()))
 							self.total = 0
 						else
-							self.Text.Hide()
+							self.Text:Hide()
 						end
 					end
 				end
