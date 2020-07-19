@@ -654,7 +654,11 @@ function BigAuras:CreateFrames()
 				local _frame = self.frames[point]
 				
 				local font, size = _frame.Text:GetFont()
-				_frame.Text:SetFont(font, size, "OUTLINE")
+				if point:find("party") or point:find("arena") then
+					_frame.Text:SetFont(font, size/1.4, "OUTLINE")
+				else
+					_frame.Text:SetFont(font, size, "OUTLINE")
+				end
 				
 				_frame.showingSpellID = nil
 				_frame.showingSpellPriority = nil
