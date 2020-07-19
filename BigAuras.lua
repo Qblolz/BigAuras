@@ -830,7 +830,6 @@ function BigAuras:CreateFrames()
 						self.Cooldown:Show()
 						CooldownFrame_SetTimer(self.Cooldown, expirationTime - duration, duration, 1 )
 						self.Cooldown:SetAllPoints(self.Icon)
-						self:SetScript("OnUpdate", nil)
 					else
 						self.Text:Show()
 						self.Cooldown:Hide()
@@ -988,7 +987,7 @@ function BigAuras_OnUpdate( self, elapsed )
 		end
     end
 	
-	if not self.configuration.showSwipe and self.showingSpellID then
+	if self and not self.configuration.showSwipe and self.showingSpellID then
 		self:UpdateTimer(self,elapsed)
 	end
 end
