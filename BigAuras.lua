@@ -913,7 +913,7 @@ function BigAuras_OnUpdate( self, elapsed )
     for _, auraFilter in pairs(filters) do
         for auraIndex = 1, 40 do
             local name, _, icon, _, _, duration, expirationTime, _, _, _, spellID, _, _, _, _, _ = UnitAura(self.point, auraIndex, auraFilter)
-            if spellID or name then
+            if spellID then
 				local categoryPriority
 				local spellPriority
 
