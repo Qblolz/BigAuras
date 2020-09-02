@@ -596,6 +596,8 @@ local function SetCooldownTime(self, expiration, duration)
 
 	if expiration > 0 and duration > 0 then
 		self.Cooldown:SetCooldown(expiration - duration, duration)
+	else
+		self.Cooldown:Hide()
 	end
 end
 
