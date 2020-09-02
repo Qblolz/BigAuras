@@ -594,7 +594,9 @@ end
 local function SetCooldownTime(self, expiration, duration)
 	self:Show()
 
-	self.Cooldown:SetCooldown(expiration - duration, duration)
+	if expiration > 0 and duration > 0 then
+		self.Cooldown:SetCooldown(expiration - duration, duration)
+	end
 end
 
 function BigAuras:GetParent(unit)
