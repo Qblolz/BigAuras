@@ -336,6 +336,7 @@ BigAuras.categories = {
 		name = "Roots",
 		priority = 100,
 		spells = {
+			[53148]   = 100,  -- Charge(pets)
 			[53308]   = 100,  -- Entangling Roots
 			[19675] = 100,	-- Feral Charge Effect (immobilize with interrupt [spell lockout, not silence])
 			[48999] = 100,	-- Counterattack
@@ -697,7 +698,7 @@ function BigAuras:CreateAndUpdateFrame(unit)
 		end
 
 		frame:ClearSpellData()
-	else
+	elseif unit and self.frames[unit] then
 		self.frames[unit]:Hide()
 	end
 end
@@ -880,8 +881,10 @@ function BigAuras:TestMode()
 		end
 	else
 		for unit in pairs(self.anchors) do
-			self.frames[unit]:Hide()
-			self.frames[unit].UnitText:Hide()
+			if unit and self.frames[unit] then
+				self.frames[unit]:Hide()
+				self.frames[unit].UnitText:Hide()
+			end
 		end
 	end
 end
