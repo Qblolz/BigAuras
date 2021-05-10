@@ -217,6 +217,8 @@ BigAuras.categories = {
 			[25046] = 175,	-- Arcane Torrent (15 energy)
 			[50613] = 175,  -- Arcane Torrent (15 runes)
 			[28730] = 175,  -- Arcane Torrent (6% mana)
+			[54785] = 175,  -- Demon Charge
+			[47995] = 175,  -- Intercept
 		}
 	},
 	{
