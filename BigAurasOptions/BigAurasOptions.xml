@@ -1,0 +1,948 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="BigAurasOptions.lua" />
+	<Script file="BigAurasOptionProfile.lua" />
+	<!-- TEMPLATE -->
+	<!-- DROPDOWN -->
+	<Frame name="BigAurasOptionDropdownTemplate" inherits="UIDropDownMenuTemplate" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentLabel" inherits="GameFontNormalSmall" parentKey="label">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+							<Offset>
+								<AbsDimension x="16" y="3" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnShow>
+				BigAurasOptionPrfileDropdown_OnShow(self)
+			</OnShow>
+		</Scripts>
+	</Frame>
+	<!-- CHECKBUTTON -->
+	<CheckButton name="BigAurasOptionCheckButtonTemplate" motionScriptsWhileDisabled="true" virtual="true">
+		<Size>
+			<AbsDimension x="26" y="26" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="0" right="-100" top="0" bottom="0" />
+		</HitRectInsets>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentLabel" inherits="GameFontHighlightLeft" parentKey="label">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="2" y="1" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick function="BigAurasOptionProfileCheckButton_OnClick" />
+			<OnEnable>
+				self.label:SetFontObject(GameFontHighlightLeft);
+			</OnEnable>
+			<OnDisable>
+				self.label:SetFontObject(GameFontDisableLeft);
+			</OnDisable>
+		</Scripts>
+		<NormalTexture file="Interface\Buttons\UI-CheckBox-Up" />
+		<PushedTexture file="Interface\Buttons\UI-CheckBox-Down" />
+		<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD" />
+		<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check" />
+		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
+	</CheckButton>
+	<!-- SLIDER -->
+	<Slider name="BigAurasOptionSliderTemplate" inherits="OptionsSliderTemplate" minValue="1" maxValue="20" valueStep="1" virtual="true">
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentValue" inherits="GameFontHighlightSmall" parentKey="value">
+					<Anchors>
+						<Anchor point="TOP" relativePoint="BOTTOM" x="0" y="0" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnable>
+				self.lable:SetFontObject(GameFontHighlightLeft);
+				self.value:SetFontObject(GameFontHighlightSmall);
+				self.lowLable:SetFontObject(GameFontHighlightSmall);
+				self.maxLable:SetFontObject(GameFontHighlightSmall);
+			</OnEnable>
+			<OnDisable>
+				self.lable:SetFontObject(GameFontDisableLeft);
+				self.value:SetFontObject(GameFontDisableSmall);
+				self.lowLable:SetFontObject(GameFontDisableSmall);
+				self.maxLable:SetFontObject(GameFontDisableSmall);
+			</OnDisable>
+			<OnValueChanged>
+				BigAurasOptionProfileSlider_OnValueChanged(self, value, true)
+			</OnValueChanged>
+		</Scripts>
+	</Slider>
+	<Slider name="BigAurasOptionSliderWithEditBoxTemplate" inherits="BigAurasOptionSliderTemplate" minValue="10" maxValue="120" valueStep="1" virtual="true">
+		<Frames>
+			<EditBox name="$parentEditBox" parentKey="editBox" JustifyV="CENTER" justifyH="CENTER" autoFocus="false">
+				<Size x="45" y="15" />
+				<Anchors>
+					<Anchor point="TOP" relativePoint="BOTTOM" x="0" y="-3" />
+				</Anchors>
+				<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\ChatFrame\ChatFrameBackground" tile="true">
+					<Color r="0" g="0" b="0" a="0.5" />
+					<BorderColor r="0.3" g="0.3" b="0.3" a="0.8" />
+					<BackgroundInsets>
+						<AbsInset left="1" right="1" top="1" bottom="1" />
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="5" />
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="1" />
+					</EdgeSize>
+				</Backdrop>
+				<FontString justifyH="CENTER" inherits="GameFontHighlightSmall" />
+				<DisabledFont style="GameFontHighlightSmall" />
+				<Scripts>
+					<OnEnterPressed function="BigAurasOptionSlidereEditBox_OnEnterPressed" />
+					<OnEscapePressed>
+						self:ClearFocus();
+					</OnEscapePressed>
+					<OnEnter>
+						--self:SetBackdropBorderColor(0.5,0.5,0.5,1);
+					</OnEnter>
+					<OnLeave>
+						--self:SetBackdropBorderColor(0.3,0.3,0.3,0.8);
+					</OnLeave>
+				</Scripts>
+			</EditBox>
+		</Frames>
+		<Scripts>
+			<OnEnable>
+				BigAurasOptionProfileEditBox_Enabled(self.editBox, true)
+				self.lable:SetFontObject(GameFontHighlightLeft);
+				self.value:SetFontObject(GameFontHighlightSmall);
+				self.lowLable:SetFontObject(GameFontHighlightSmall);
+				self.maxLable:SetFontObject(GameFontHighlightSmall);
+			</OnEnable>
+			<OnDisable>
+				BigAurasOptionProfileEditBox_Enabled(self.editBox, false)
+				self.lable:SetFontObject(GameFontDisableLeft);
+				self.value:SetFontObject(GameFontDisableSmall);
+				self.lowLable:SetFontObject(GameFontDisableSmall);
+				self.maxLable:SetFontObject(GameFontDisableSmall);
+			</OnDisable>
+		</Scripts>
+	</Slider>
+	<!-- SEPARATOR OPTION TEXTURE -->
+	<Texture name="SeparatorOptionTextureTemplate" virtual="true">
+		<Anchors>
+			<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="10" y="-40" />
+			<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="-10" y="-41" />
+		</Anchors>
+		<Color r="0.25" g="0.25" b="0.25" />
+	</Texture>
+	<!-- TITLE OPTION TEXT -->
+	<FontString name="TitleOptionTextTemplate" inherits="GameFontNormalLarge" justifyH="RIGHT" justifyV="TOP" virtual="true">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="16" y="-16" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+	</FontString>
+	<!-- BACKDROP TEMPLATE -->
+	<Frame name="BigAurasBackdropTemplate" virtual="true">
+		<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<Color r="0.1" g="0.1" b="0.1" a="0.4" />
+			<BorderColor r="0.5" g="0.5" b="0.5" a="1" />
+			<BackgroundInsets>
+				<AbsInset left="3" right="3" top="5" bottom="3" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="16" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="16" />
+			</EdgeSize>
+		</Backdrop>
+	</Frame>
+	<!-- TEST BUTTON TEMPLATE -->
+	<Button name="BigAurasOptionTestButtonTemplate" inherits="UIPanelButtonTemplate" text="TEST MODE" virtual="true">
+		<Size x="120" y="30" />
+		<Anchors>
+			<Anchor point="BOTTOMRIGHT" x="-15" y="15" />
+		</Anchors>
+		<Scripts>
+			<OnClick function="BigAurasOptionTestButton_OnClick" />
+		</Scripts>
+	</Button>
+	<!-- TITLE OPTION FRMAE TEMPLATE -->
+	<Frame name="TitleOptionFrameTemplate" virtual="true">
+		<Anchors>
+			<Anchor point="TOPLEFT" relativePoint="TOPLEFT" />
+			<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="0" y="-40" />
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" parentKey="text" inherits="TitleOptionTextTemplate" />
+				<Texture name="$parentSeparator" inherits="SeparatorOptionTextureTemplate" />
+			</Layer>
+		</Layers>
+		<Frames>
+			<CheckButton name="$parentCheckButton" parentKey="Enabled" inherits="BigAurasOptionCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentSeparator" relativePoint="TOPRIGHT" x="-60" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						BigAurasOptionProfileCheckButton_InitializeWidget(self, "enable", "enable", nil, function(self)
+							local currentValue = GetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, optionName or self.optionName, self.valueName);
+							self:SetChecked(currentValue);
+							self.NotDisable = true;
+							BigAurasOptionProileCheckButton_SetEnabled(self, currentValue);
+						end);
+					</OnLoad>
+					<OnClick>
+						SetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, self:GetChecked() or false, self.optionName, self.valueName);
+						BigAurasOptionProileCheckButton_SetEnabled(self, self:GetChecked());
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+		</Frames>
+	</Frame>
+	<!-- CONTAINER TEMPLATE -->
+	<Frame name="BigAurasContainerTemplate" inherits="BigAurasBackdropTemplate" toplevel="true" frameStrata="DIALOG" virtual="true">
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-20" y="-200" />
+			<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="20" y="60" />
+		</Anchors>
+	</Frame>
+	<!-- OPTION WINDOW TEMPLATE -->
+	<Frame name="BigAurasOptionWindowTemplate" inherits="BigAurasBackdropTemplate" virtual="true">
+		<Frames>
+			<CheckButton name="$parentCheckBox" parentKey="check" hidden="false" inherits="BigAurasOptionCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="20" y="-10" />
+				</Anchors>
+			</CheckButton>
+			<Slider name="$parentSlider" parentKey="slider" inherits="BigAurasOptionSliderTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="LEFT" x="30" y="0" />
+					<Anchor point="TOPRIGHT" relativePoint="RIGHT" x="-30" y="-20" />
+				</Anchors>
+			</Slider>
+		</Frames>
+	</Frame>
+	<!-- TAB PAGE OPTION TEMPLATE -->
+	<Frame name="BigAurasOptionTabPageTemplate" virtual="true">
+		<Frames>
+			<Frame name="$parentSpellsFrame" parentKey="spellsFrame" inherits="BigAurasBackdropTemplate">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOP" x="-10" y="-10" />
+					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" x="10" y="10" />
+				</Anchors>
+				<Frames>
+					<EditBox parentKey="searchBar" autoFocus="false" inherits="InputBoxTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="20" y="-10" />
+							<Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" x="-40" y="-30" />
+						</Anchors>
+						<Scripts>
+							<OnTextChanged function="BigAurasOptionProfileEditBox_OnTextChanged" />
+							<OnTabPressed function="BigAurasOptionProfileEditBox_OnTabPressed" />
+							<OnEnterPressed function="BigAurasOptionProfileEditBox_OnEnterPressed" />
+						</Scripts>
+					</EditBox>
+					<ScrollFrame name="$parentScrollFrame" parentKey="scrollFrame" inherits="UIPanelScrollFrameTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="10" y="-40" />
+							<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-30" y="10" />
+						</Anchors>
+						<ScrollChild>
+							<Frame name="$parentContainer" parentKey="container">
+								<Size x="300" y="1" />
+								<Anchors>
+									<Anchor point="CENTER" />
+								</Anchors>
+							</Frame>
+						</ScrollChild>
+						<Scripts>
+							<OnLoad function="ScrollFrame_OnLoad" />
+						</Scripts>
+					</ScrollFrame>
+				</Frames>
+			</Frame>
+			<Frame name="$parentSetting" parentKey="setting" inherits="BigAurasBackdropTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOP" x="0" y="-10" />
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-10" y="10" />
+				</Anchors>
+				<Frames>
+					<Frame name="$parentCategory" parentKey="categoryPriority" inherits="BigAurasBackdropTemplate, BigAurasOptionWindowTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="20" y="-40" />
+							<Anchor point="BOTTOMRIGHT" relativePoint="RIGHT" x="-20" y="0" />
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self.slider.lable 	 = _G[self.slider:GetName().."Text"];
+								self.slider.lowLable = _G[self.slider:GetName().."Low"];
+								self.slider.maxLable = _G[self.slider:GetName().."High"];
+								self.slider.isGroup = true;
+								self.slider.isRound = true;
+								BigAurasOptionProfileSlider_InitializeWidget(self.slider, nil, nil, "value");
+								BigAurasOptionProfileCheckButton_InitializeWidget(self.check, "groupPriority", nil, "enabled");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+					<Frame name="$parentSpell" parentKey="spellPriority" inherits="BigAurasBackdropTemplate, BigAurasOptionWindowTemplate" hidden="true" setAllPoints="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parentCategory" relativePoint="BOTTOMLEFT" x="0" y="-20" />
+							<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-20" y="30" />
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self.slider.lable 	 = _G[self.slider:GetName().."Text"];
+								self.slider.lowLable = _G[self.slider:GetName().."Low"];
+								self.slider.maxLable = _G[self.slider:GetName().."High"];
+								self.slider.isRound = true;
+								BigAurasOptionProfileSlider_InitializeWidget(self.slider, nil, nil, "value");
+								BigAurasOptionProfileCheckButton_InitializeWidget(self.check, "spellPriority", nil, "enabled");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+				</Frames>
+			</Frame>
+		</Frames>
+	</Frame>
+	<!-- SUBOPTION TEMPLATTE -->
+	<Frame name="BigAurasOptionTemplate" virtual="true">
+		<Frames>
+			<Frame name="$parentTitleFrame" parentKey="titleFrame" inherits="TitleOptionFrameTemplate" />
+			<Button name="$parentTestButton" parentKey="testButton" inherits="BigAurasOptionTestButtonTemplate" />
+			<Frame name="$parentSortByDropdown" inherits="BigAurasOptionDropdownTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTitleFrame" relativePoint="BOTTOMLEFT" x="15" y="-30" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						BigAurasOptionProfileDropdown_InitializeWidget(self, "copyFrom", { "player", "pet", "target", "focus", "party1", "party2", "party3", "party4", "partypet1", "partypet2", "partypet3", "partypet4", "arena1", "arena2", "arena3", "arena4", "arena5", "arenapet1", "arenapet2", "arenapet3", "arenapet4", "arenapet5"});
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<CheckButton name="$parentUnlock" parentKey="unlock" inherits="BigAurasOptionCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentSortByDropdown" relativePoint="BOTTOMLEFT" x="15" y="-15" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						BigAurasOptionProfileCheckButton_InitializeWidget(self, "unlock", "unlock", nil, function(self)
+						local currentValue = GetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, optionName or self.optionName, self.valueName);
+						local parent = self:GetParent();
+						local sizeSlider = parent.size;
+						local xOffSlider = parent.xOff;
+						local yOffSlider = parent.yOff;
+						local container = parent.container;
+						self:SetChecked(currentValue);
+						
+						if ( currentValue  and container ) then
+						container:ClearAllPoints();
+						container:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -20, -260);
+						container:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", 20, 60);
+						elseif ( container ) then
+						container:ClearAllPoints();
+						container:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -20, -200);
+						container:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", 20, 60);
+						end
+						BigAurasOptionProfileFrame_Shown(currentValue, sizeSlider, xOffSlider, yOffSlider);
+						end);
+					</OnLoad>
+					<OnClick function="BigAurasOptionProfileCheckButtonUnlock_OnClick" />
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentShowSwipe" parentKey="showSwipe" inherits="BigAurasOptionCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentUnlockLabel" relativePoint="RIGHT" x="20" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						BigAurasOptionProfileCheckButton_InitializeWidget(self, "showSwipe", "showSwipe", nil, function(self)
+							local currentValue = GetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, optionName or self.optionName, self.valueName);
+							self:SetChecked(currentValue);
+						end)
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentTimerText" parentKey="timerText" inherits="BigAurasOptionCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentShowSwipeLabel" relativePoint="RIGHT" x="20" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						BigAurasOptionProfileCheckButton_InitializeWidget(self, "timertext", "timertext", nil, function(self)
+							local currentValue = GetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, optionName or self.optionName, self.valueName);
+							self:SetChecked(currentValue);
+						end);
+					</OnLoad>
+				</Scripts>
+			</CheckButton>
+			<Slider name="$parentSize" parentKey="size" hidden="true" inherits="BigAurasOptionSliderWithEditBoxTemplate" minValue="10" maxValue="120" valueStep="1">
+				<Size>
+					<AbsDimension x="170" y="17" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentUnlock" relativePoint="BOTTOMLEFT" x="0" y="-30" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.value:Hide();
+						self.lable 	 = _G[self:GetName().."Text"];
+						self.lowLable = _G[self:GetName().."Low"];
+						self.maxLable = _G[self:GetName().."High"];
+						BigAurasOptionProfileSlider_InitializeWidget(self, "size", "size", nil, true);
+					</OnLoad>
+				</Scripts>
+			</Slider>
+			<Slider name="$parentXSET" parentKey="xOff" hidden="true" inherits="BigAurasOptionSliderWithEditBoxTemplate" minValue="-1920" maxValue="1920" valueStep="1">
+				<Size>
+					<AbsDimension x="170" y="17" />
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentSize" relativePoint="RIGHT" x="30" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.value:Hide();
+						self.lable 	 = _G[self:GetName().."Text"];
+						self.lowLable = _G[self:GetName().."Low"];
+						self.maxLable = _G[self:GetName().."High"];
+						BigAurasOptionProfileSlider_InitializeWidget(self, "offsetY", "offsetY", nil, true);
+					</OnLoad>
+				</Scripts>
+			</Slider>
+			<Slider name="$parentYSET" parentKey="yOff" hidden="true" inherits="BigAurasOptionSliderWithEditBoxTemplate" minValue="-1920" maxValue="1920" valueStep="1">
+				<Size>
+					<AbsDimension x="170" y="17" />
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentXSET" relativePoint="RIGHT" x="30" y="0" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.value:Hide();
+						self.lable 	 = _G[self:GetName().."Text"];
+						self.lowLable = _G[self:GetName().."Low"];
+						self.maxLable = _G[self:GetName().."High"];
+						BigAurasOptionProfileSlider_InitializeWidget(self, "offsetX", "offsetX", nil, true);
+					</OnLoad>
+				</Scripts>
+			</Slider>
+			<Slider name="$parentAlpha" parentKey="alpha" inherits="BigAurasOptionSliderTemplate" minValue="0" maxValue="1" valueStep="0.1">
+				<Size>
+					<AbsDimension x="170" y="17" />
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOM" relativeTo="$parentYSET" relativePoint="TOP" x="0" y="35" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self.lable 	 = _G[self:GetName().."Text"];
+						self.lowLable = _G[self:GetName().."Low"];
+						self.maxLable = _G[self:GetName().."High"];
+						BigAurasOptionProfileSlider_InitializeWidget(self, "alpha", "alpha", nil, true);
+					</OnLoad>
+				</Scripts>
+			</Slider>
+			<Frame name="$parentContainer" parentKey="container" inherits="BigAurasContainerTemplate">
+				<Frames>
+					<Frame name="$parentTabPage1" parentKey="page1" hidden="false">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" />
+						</Anchors>
+						<Frames>
+							<Frame name="$parentOptionFrame" parentKey="optionFrame" inherits="BigAurasOptionTabPageTemplate" setAllPoints="true">
+								<Scripts>
+									<OnLoad>
+										self.category = "totalimmunity";
+										BigAurasOptionProfileOptionFrame_OnLoad(self);
+									</OnLoad>
+								</Scripts>
+							</Frame>
+						</Frames>
+						<Scripts>
+							<OnLoad function="BigAurasOptionProfileTabPage_OnLoad" />
+						</Scripts>
+					</Frame>
+					<Frame name="$parentTabPage2" parentKey="page2" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" />
+						</Anchors>
+						<Frames>
+							<Frame name="$parentOptionFrame" parentKey="optionFrame" inherits="BigAurasOptionTabPageTemplate" setAllPoints="true">
+								<Scripts>
+									<OnLoad>
+										self.category = "immunity";
+										BigAurasOptionProfileOptionFrame_OnLoad(self);
+									</OnLoad>
+								</Scripts>
+							</Frame>
+						</Frames>
+						<Scripts>
+							<OnLoad function="BigAurasOptionProfileTabPage_OnLoad" />
+						</Scripts>
+					</Frame>
+					<Frame name="$parentTabPage3" parentKey="page3" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" />
+						</Anchors>
+						<Frames>
+							<Frame name="$parentOptionFrame" parentKey="optionFrame" inherits="BigAurasOptionTabPageTemplate" setAllPoints="true">
+								<Scripts>
+									<OnLoad>
+										self.category = "crowdcontrol";
+										BigAurasOptionProfileOptionFrame_OnLoad(self);
+									</OnLoad>
+								</Scripts>
+							</Frame>
+						</Frames>
+						<Scripts>
+							<OnLoad function="BigAurasOptionProfileTabPage_OnLoad" />
+						</Scripts>
+					</Frame>
+					<Frame name="$parentTabPage4" parentKey="page4" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" />
+						</Anchors>
+						<Frames>
+							<Frame name="$parentOptionFrame" parentKey="optionFrame" inherits="BigAurasOptionTabPageTemplate" setAllPoints="true">
+								<Scripts>
+									<OnLoad>
+										self.category = "defensive";
+										BigAurasOptionProfileOptionFrame_OnLoad(self);
+									</OnLoad>
+								</Scripts>
+							</Frame>
+						</Frames>
+						<Scripts>
+							<OnLoad function="BigAurasOptionProfileTabPage_OnLoad" />
+						</Scripts>
+					</Frame>
+					<Frame name="$parentTabPage5" parentKey="page5" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" />
+						</Anchors>
+						<Frames>
+							<Frame name="$parentOptionFrame" parentKey="optionFrame" inherits="BigAurasOptionTabPageTemplate" setAllPoints="true">
+								<Scripts>
+									<OnLoad>
+										self.category = "offensive";
+										BigAurasOptionProfileOptionFrame_OnLoad(self);
+									</OnLoad>
+								</Scripts>
+							</Frame>
+						</Frames>
+						<Scripts>
+							<OnLoad function="BigAurasOptionProfileTabPage_OnLoad" />
+						</Scripts>
+					</Frame>
+					<Frame name="$parentTabPage6" parentKey="page6" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" />
+						</Anchors>
+						<Frames>
+							<Frame name="$parentOptionFrame" parentKey="optionFrame" inherits="BigAurasOptionTabPageTemplate" setAllPoints="true">
+								<Scripts>
+									<OnLoad>
+										self.category = "roots";
+										BigAurasOptionProfileOptionFrame_OnLoad(self);
+									</OnLoad>
+								</Scripts>
+							</Frame>
+						</Frames>
+						<Scripts>
+							<OnLoad function="BigAurasOptionProfileTabPage_OnLoad" />
+						</Scripts>
+					</Frame>
+					<Frame name="$parentTabPage7" parentKey="page7" hidden="true">
+						<Anchors>
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" />
+						</Anchors>
+						<Frames>
+							<Frame name="$parentOptionFrame" parentKey="optionFrame" inherits="BigAurasOptionTabPageTemplate" setAllPoints="true">
+								<Scripts>
+									<OnLoad>
+										self.category = "other";
+										BigAurasOptionProfileOptionFrame_OnLoad(self);
+									</OnLoad>
+								</Scripts>
+							</Frame>
+						</Frames>
+						<Scripts>
+							<OnLoad function="BigAurasOptionProfileTabPage_OnLoad" />
+						</Scripts>
+					</Frame>
+					<Button name="$parentTab1" inherits="OptionsFrameTabButtonTemplate" id="1" text="Total Immunities">
+						<Anchors>
+							<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" />
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PanelTemplates_SetTab(self:GetParent(), 1);
+								BigAurasOptionProfileTabFrame_OnClick(self:GetParent(), 1)
+							</OnClick>
+							<OnDisable>
+								_G[self:GetName().."Text"]:SetFontObject("GameFontDisableSmall")
+							</OnDisable>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab2" inherits="OptionsFrameTabButtonTemplate" id="2" text="Immunity">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parentTab1" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="-16" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PanelTemplates_SetTab(self:GetParent(), 2);
+								BigAurasOptionProfileTabFrame_OnClick(self:GetParent(), 2)
+							</OnClick>
+							<OnDisable>
+								_G[self:GetName().."Text"]:SetFontObject("GameFontDisableSmall")
+							</OnDisable>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab3" inherits="OptionsFrameTabButtonTemplate" id="3" text="Crowd Control">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parentTab2" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="-16" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PanelTemplates_SetTab(self:GetParent(), 3);
+								BigAurasOptionProfileTabFrame_OnClick(self:GetParent(), 3)
+							</OnClick>
+							<OnDisable>
+								_G[self:GetName().."Text"]:SetFontObject("GameFontDisableSmall")
+							</OnDisable>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab4" inherits="OptionsFrameTabButtonTemplate" id="4" text="Defensive">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parentTab3" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="-16" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PanelTemplates_SetTab(self:GetParent(), 4);
+								BigAurasOptionProfileTabFrame_OnClick(self:GetParent(), 4)
+							</OnClick>
+							<OnDisable>
+								_G[self:GetName().."Text"]:SetFontObject("GameFontDisableSmall")
+							</OnDisable>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab5" inherits="OptionsFrameTabButtonTemplate" id="5" text="Offensive">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parentTab4" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="-16" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PanelTemplates_SetTab(self:GetParent(), 5);
+								BigAurasOptionProfileTabFrame_OnClick(self:GetParent(), 5)
+							</OnClick>
+							<OnDisable>
+								_G[self:GetName().."Text"]:SetFontObject("GameFontDisableSmall")
+							</OnDisable>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab6" inherits="OptionsFrameTabButtonTemplate" id="6" text="Roots">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parentTab5" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="-16" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PanelTemplates_SetTab(self:GetParent(), 6);
+								BigAurasOptionProfileTabFrame_OnClick(self:GetParent(), 6)
+							</OnClick>
+							<OnDisable>
+								_G[self:GetName().."Text"]:SetFontObject("GameFontDisableSmall")
+							</OnDisable>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab7" inherits="OptionsFrameTabButtonTemplate" id="7" text="Other">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="$parentTab6" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="-16" y="0" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PanelTemplates_SetTab(self:GetParent(), 7);
+								BigAurasOptionProfileTabFrame_OnClick(self:GetParent(), 7)
+							</OnClick>
+							<OnDisable>
+								_G[self:GetName().."Text"]:SetFontObject("GameFontDisableSmall")
+							</OnDisable>
+						</Scripts>
+					</Button>
+				</Frames>
+				<Scripts>
+					<OnLoad>
+						self.elapsed = 0;
+						PanelTemplates_SetNumTabs(self, 7);
+						PanelTemplates_SetTab(self, 1);
+						BigAurasOptionProfileTabFrame_OnClick(self, 1)
+					</OnLoad>
+					<OnShow>
+						--PlaySound("UChatScrollButton");
+						PanelTemplates_SetTab(self, 1);
+					</OnShow>
+					<OnHide>
+						--PlaySound("UChatScrollButton");
+					</OnHide>
+				</Scripts>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnShow>
+				BigAurasSubOption_OnShow(self)
+			</OnShow>
+		</Scripts>
+	</Frame>
+	<!-- MAINOPTION FRAME -->
+	<Frame name="BigAurasOption" parent="InterfaceOptionsFramePanelContainer">
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentTitle" parentKey="title" inherits="TitleOptionTextTemplate" />
+				<FontString name="$parentVersion" parentKey="version" inherits="GameFontNormalMed3" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="-16" y="-16" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parentSeparator" inherits="SeparatorOptionTextureTemplate" />
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parentSortByDropdown" inherits="BigAurasOptionDropdownTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentSeparator" relativePoint="BOTTOMLEFT" x="15" y="-30" />
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						BigAurasOptionProfileDropdown_InitializeWidget(self, "anchor", { "Blizzard", "SUF", "X-Perl" });
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Button name="$parentTestButton" parentKey="testButton" inherits="BigAurasOptionTestButtonTemplate" />
+		</Frames>
+		<Scripts>
+			<OnLoad function="BigAurasOption_OnLoad" />
+		</Scripts>
+	</Frame>
+	<!-- SUBOPTION FRAME -->
+	<Frame name="BigAurasSubOptions">
+		<Frames>
+			<!-- PLAYER -->
+			<Frame name="$parentPlayer" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "player");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<!-- PET -->
+			<Frame name="$parentPet" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "pet");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<!-- TARGET -->
+			<Frame name="$parentTarget" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "target");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<!-- FOCUS -->
+			<Frame name="$parentFocus" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "focus");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<!-- PARTY -->
+			<Frame name="$parentParty1" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "party1");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentParty2" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "party2");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentParty3" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "party3");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentParty4" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "party4");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<!-- PARTYPET -->
+			<Frame name="$parentPartyPet1" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "partypet1");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentPartyPet2" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "partypet2");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentPartyPet3" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "partypet3");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentPartyPet4" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "partypet4");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<!-- ARENA -->
+			<Frame name="$parentArena1" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arena1");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentArena2" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arena2");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentArena3" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arena3");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentArena4" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arena4");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentArena5" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arena5");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<!-- ARENAPET -->
+			<Frame name="$parentArenaPet1" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arenapet1");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentArenaPet2" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arenapet2");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentArenaPet3" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arenapet3");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentArenaPet4" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arenapet4");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentArenaPet5" hidden="true" inherits="BigAurasOptionTemplate">
+				<Scripts>
+					<OnLoad>
+						BigAurasSubOption_OnLoad(self, "arenapet5");
+					</OnLoad>
+				</Scripts>
+			</Frame>
+		</Frames>
+	</Frame>
+</Ui>
