@@ -138,7 +138,9 @@ function GetSpellDataBySpellID(unit, spellID)
 			
 			if (type(_value) ~= "table" and _spellId == spellID) then
 				if profile[unit][spellID] ~= nil then
-					spellData.spellPriority = profile[unit][spellID]["value"]
+					if profile[unit][_value.parent]["enabled"] then
+						spellData.spellPriority = profile[unit][spellID]["value"]
+					end
 				else
 					spellData.spellPriority = _value
 				end
@@ -146,7 +148,9 @@ function GetSpellDataBySpellID(unit, spellID)
 				return spellData;
 			elseif type(_value) == "table" and _spellId == spellID then
 				if profile[unit][_value.parent] ~= nil then
-					spellData.spellPriority = profile[unit][_value.parent]["value"]
+					if profile[unit][_value.parent]["enabled"] then
+						spellData.spellPriority = profile[unit][_value.parent]["value"]
+					end
 				else
 					spellData.spellPriority = category.spells[_value.parent]
 				end
