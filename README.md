@@ -11,9 +11,6 @@
 * Can change priority for spell in category
 * Can disable category for frame
 
-#### Install
-##### After download from github - rename folder into "BigAuras"
-
 #### demo
 1. ![Demo 1](https://i.imgur.com/Atwzxwg.png)
 
