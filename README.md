@@ -15,9 +15,7 @@
 ##### After download from github - rename folder into "BigAuras"
 
 #### demo
-1. ![Demo 1](https://i.imgur.com/fE4vBXp.jpg)
-2. ![Demo 2](https://i.imgur.com/3WjwPbP.jpg)
-3. ![Demo 3](https://i.imgur.com/ZCptoKK.jpg)
+1. ![Demo 1](https://i.imgur.com/Atwzxwg.png)
 
 ###### support me
 * https://streamlabs.com/qbjw/tip
