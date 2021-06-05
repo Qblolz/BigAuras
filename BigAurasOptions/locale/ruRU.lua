@@ -1,4 +1,4 @@
-if ( not GetLocale()=="ruRU" ) then
+if ( GetLocale() ~= "ruRU" ) then
     return;
 end
 
@@ -42,4 +42,4 @@ BIG_AURAS_OPTION_OFFSETY = "Сместить в верх";
 BIG_AURAS_OPTION_SIZE = "Размер";
 BIG_AURAS_OPTION_SHOWSWIPE = "Текстура отсчета";
 BIG_AURAS_OPTION_UNLOCK = "Разблокировать";
-BIG_AURAS_OPTION_TIMERTEXT = "Отсчет";
+BIG_AURAS_OPTION_TIMERTEXT = "OmniCC";

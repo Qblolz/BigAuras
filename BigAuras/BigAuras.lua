@@ -273,10 +273,12 @@ local function SetCooldownTime(self, expiration, duration)
 	self:Show()
 
 	if expiration > 0 and duration > 0 then
+		self.Cooldown:SetFrameLevel(self:GetFrameLevel())
 		self.Cooldown:SetCooldown(expiration - duration, duration)
 	else
 		self.Cooldown:SetCooldown(0, 0)
 		self.Cooldown:Hide()
+		self.Cooldown:SetFrameLevel(self:GetFrameLevel() - 1)
 	end
 end
 
