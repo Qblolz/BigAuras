@@ -1,6 +1,6 @@
---[[if ( GetLocale() ~= "enUS" ) then
+if ( GetLocale() ~= "enUS" ) then
     return;
-end]]
+end
 
 DEFAULT_BIGAURAS_PROFILE_NAME   = "Default";
 
