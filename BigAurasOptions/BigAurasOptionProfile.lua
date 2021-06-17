@@ -195,7 +195,7 @@ function CopyBigAurasConfigureFrom(profile, from, to)
 	for key, profiles in pairs(PROFILES) do
 		if ( profiles.name == profile ) then
 			if profiles[to] ~= nil and profiles[from] ~= nil then
-				profiles[to] = profiles[from]
+				profiles[to] = CopyTable(profiles[from])
 			end
 		end
 	end
