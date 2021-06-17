@@ -3,25 +3,26 @@ local version = GetAddOnMetadata(addon, "Version");
 local BigAurasOptionProfile = LibStub("AceAddon-3.0"):NewAddon("BigAurasOptionProfile");
 local PROFILES;
 local DEFAULT_PROFILE = ns:GetDefaultProfile();
+local _BIG_AURAS_DEFAULT_SPELLS
 
 function BigAurasOptionProfile:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("BigAurasOptionDB");
 	PROFILES = self.db.char;
-    BigAurasSubOptionProfile_ValidateProfilesLoaded()
+	BigAurasSubOptionProfile_ValidateProfilesLoaded()
 end
 
 function GetBigAurasProfileName(index)
-    if ( not PROFILES ) then
-        return 1
-    end
+	if ( not PROFILES ) then
+		return 1
+	end
 
-    return PROFILES[index].name
+	return PROFILES[index].name
 end
 
 function BigAurasSubOptionProfile_ValidateProfilesLoaded()
-    if ( #PROFILES == 0 ) then
-        BigAurasSubOptionProfile_ResetToDefaults();
-    end
+	if ( #PROFILES == 0 ) then
+		BigAurasSubOptionProfile_ResetToDefaults();
+	end
 	BigAurasSubOptionProfile_ActivateProfile(PROFILES[1]);
 end
 
@@ -68,13 +69,13 @@ function GetBigAurasProfile()
 	if PROFILES and PROFILES[1] then
 		return PROFILES[1]
 	end
-	
+
 	return nil
 end
 
 function BigAurasSubOptionProfile_ResetToDefaults()
 	local profiles = {};
-	for i=1, #PROFILES do 
+	for i=1, #PROFILES do
 		tinsert(profiles, GetBigAurasProfileName(i));
 	end
 	for i=1, #profiles do
@@ -90,20 +91,20 @@ function BigAurasSubOptionProfile_ActivateProfile(profile)
 end
 
 function SetBigAurasUnitProfileSetting(profile, unit, value, optionName, valueName)
-    if not ( profile and unit ) then
-        return;
-    end
+	if not ( profile and unit ) then
+		return;
+	end
 
-    for key, profiles in pairs(PROFILES) do
-        if ( profiles.name == profile ) then
-            if ( valueName ) then
-                profiles[unit][optionName] = profiles[unit][optionName] or {}
-                profiles[unit][optionName][valueName] = value;
-            else
-                profiles[unit][optionName] = value;
-            end
-        end
-    end
+	for key, profiles in pairs(PROFILES) do
+		if ( profiles.name == profile ) then
+			if ( valueName ) then
+				profiles[unit][optionName] = profiles[unit][optionName] or {}
+				profiles[unit][optionName][valueName] = value;
+			else
+				profiles[unit][optionName] = value;
+			end
+		end
+	end
 end
 
 function GetBigAurasUnitProfileSetting(profile, unit, optionName, valueName)
@@ -122,45 +123,66 @@ function GetBigAurasUnitProfileSetting(profile, unit, optionName, valueName)
 	end
 end
 
-function GetSpellDataBySpellID(unit, spellID)
-	if not ( PROFILES and unit and spellID ) then
+function GetOrCollectSpellIndexData()
+	if _BIG_AURAS_DEFAULT_SPELLS ~= nil then
+		return _BIG_AURAS_DEFAULT_SPELLS
+	end
+
+	_BIG_AURAS_DEFAULT_SPELLS = {}
+
+	for i, category in pairs(_CATEGORIES) do
+		for spellId, spellData in pairs(category.spells) do
+			_BIG_AURAS_DEFAULT_SPELLS[spellId] = {}
+			if type(spellData) ~= "table" then
+				_BIG_AURAS_DEFAULT_SPELLS[spellId].spellPriority = spellData
+				_BIG_AURAS_DEFAULT_SPELLS[spellId].categoryPriority = category.slider
+				_BIG_AURAS_DEFAULT_SPELLS[spellId].categoryName = category.name
+			else
+				_BIG_AURAS_DEFAULT_SPELLS[spellId] = CopyTable(spellData)
+			end
+		end
+	end
+
+	return _BIG_AURAS_DEFAULT_SPELLS
+end
+
+function GetSpellDataBySpellID(unit, targetSpellID)
+	if not ( PROFILES and unit and targetSpellID ) then
 		return;
 	end
 
 	local profile = BigAurasOption.activeProfileData
-	local spellData = {}
-	spellData.spellPriority = nil
-	spellData.categoryPriority = nil
-	
-	for i, category in pairs(ns:GetCategories()) do
-		for _spellId, _value in pairs(category.spells) do
-			spellData.categoryPriority = profile[unit][category.name]["value"] or category.slider
-			
-			if (type(_value) ~= "table" and _spellId == spellID) then
-				if profile[unit][spellID] ~= nil then
-					if profile[unit][spellID]["enabled"] then
-						spellData.spellPriority = profile[unit][spellID]["value"]
-					end
+
+	local _spellData = GetOrCollectSpellIndexData()[targetSpellID]
+
+	if _spellData then
+		local spellID = targetSpellID
+		local spellData = _spellData
+
+		if spellData["parent"] then
+			spellID = spellData["parent"]
+			spellData = GetOrCollectSpellIndexData()[spellData["parent"]] or {}
+		end
+
+		if spellData.categoryName ~= nil and spellData.categoryPriority ~= nil and spellData.spellPriority ~= nil then
+			local result = {}
+
+			result.spellPriority = spellData.spellPriority
+			result.categoryPriority = profile[unit][spellData.categoryName]["value"] or spellData.categoryPriority
+
+			if profile[unit][spellID] ~= nil then
+				if profile[unit][spellID]["enabled"] == nil or profile[unit][spellID]["enabled"] == true then
+					result.spellPriority = profile[unit][spellID]["value"] or spellData.spellPriority
 				else
-					spellData.spellPriority = _value
+					result.spellPriority = 0
 				end
-				
-				return spellData;
-			elseif type(_value) == "table" and _spellId == spellID then
-				if profile[unit][_value.parent] ~= nil then
-					if profile[unit][_value.parent]["enabled"] then
-						spellData.spellPriority = profile[unit][_value.parent]["value"]
-					end
-				else
-					spellData.spellPriority = category.spells[_value.parent]
-				end
-				
-				return spellData;
 			end
+
+			return result
 		end
 	end
-	
-	return spellData;
+
+	return nil
 end
 
 function GetBigAurasUnitProfileMainSetting(profile, optionName)
@@ -179,7 +201,7 @@ function SetBigAurasUnitProfileMainSetting(profile, optionName, value)
 	if not ( PROFILES and profile ) then
 		return;
 	end
-	
+
 	for key, profiles in pairs(PROFILES) do
 		if ( profiles.name == profile ) then
 			profiles[optionName] = value;
@@ -191,7 +213,7 @@ function CopyBigAurasConfigureFrom(profile, from, to)
 	if not ( PROFILES and profile ) then
 		return;
 	end
-	
+
 	for key, profiles in pairs(PROFILES) do
 		if ( profiles.name == profile ) then
 			if profiles[to] ~= nil and profiles[from] ~= nil then
@@ -199,6 +221,6 @@ function CopyBigAurasConfigureFrom(profile, from, to)
 			end
 		end
 	end
-	
+
 	BigAurasOptionProfile_UpdateCurrentPanel()
 end

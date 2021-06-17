@@ -197,7 +197,7 @@ end)
 
 function BigAuras:UNIT_AURA(unit)
 	if not unit then return end
-	
+
 	self:GetOrCreate(unit)
 	self:UpateUnit(unit)
 end
@@ -212,26 +212,26 @@ function BigAuras:PLAYER_FOCUS_CHANGED()
 end
 
 local GetAnchor = {
-    ShadowedUnitFrames = function(anchor)
-        local frame = _G[anchor]
-        if not frame then return end
+	ShadowedUnitFrames = function(anchor)
+		local frame = _G[anchor]
+		if not frame then return end
 
-        if frame.portrait and frame.portrait:IsShown() then
-            return frame.portrait
-        else
-            return frame
-        end
-    end,
-    XPerl = function(anchor)
-        local frame = _G[anchor]
-        if not frame then return end
+		if frame.portrait and frame.portrait:IsShown() then
+			return frame.portrait
+		else
+			return frame
+		end
+	end,
+	XPerl = function(anchor)
+		local frame = _G[anchor]
+		if not frame then return end
 
-        if frame:IsShown() then
-            return frame
-        else
-            return frame:GetParent()
-        end
-    end,
+		if frame:IsShown() then
+			return frame
+		else
+			return frame:GetParent()
+		end
+	end,
 	ElvUI = function(anchor)
 		local frame = _G[anchor]
 		if not frame then return end
@@ -312,17 +312,17 @@ function BigAuras:GetOrCreate(unit)
 	if not self.db then
 		self.db = GetBigAurasProfile()
 	end
-	
+
 	local db = self.db[unit]
 	if db ~= nil and db.enable then
 		local parent, portrait = self:GetParent(unit)
-		
+
 		if string.find(unit, "arenapet") and GetCVar("showArenaEnemyPets") == "0" then
 			parent = UIParent
 		end
-		
+
 		parent = parent or UIParent
-		
+
 		if not self.frames[unit] then
 			self.frames[unit] = self:CreateFrame(unit, parent)
 		else
@@ -332,20 +332,20 @@ function BigAuras:GetOrCreate(unit)
 				self.frames[unit]:SetFrameLevel(self:GetFrameLevel() + 1)
 			end
 		end
-		
+
 		local frame = self.frames[unit]
-		
+
 		frame:SetScript("OnUpdate", nil)
 		frame.Text:Hide()
 		frame.Cooldown:Show()
 		frame.SetTime = SetCooldownTime
-		
+
 		if not self.db[unit].timertext then
 			frame.Text:Show()
 			frame.Cooldown:Hide()
 			frame.SetTime = SetTime
 		end
-		
+
 		if db.unlock or parent == UIParent then
 			frame:ClearAllPoints()
 			frame:SetScale(1)
@@ -372,7 +372,7 @@ function BigAuras:GetOrCreate(unit)
 				frame.Cooldown:SetAllPoints(parent)
 			end
 		end
-		
+
 	elseif unit and self.frames[unit] then
 		self.frames[unit]:Hide()
 	end
@@ -401,14 +401,14 @@ function BigAuras:CreateFrame(unit, parent)
 	frame.Text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 	frame.Text:SetPoint("CENTER")
 	frame.Text:SetTextColor(1,1,1,1)
-	
+
 	local font, size = frame.Text:GetFont()
 	if unit:find("party") or unit:find("arena") then
 		frame.Text:SetFont(font, size/1.4, "OUTLINE")
 	else
 		frame.Text:SetFont(font, size, "OUTLINE")
 	end
-	
+
 	frame.Text:Hide()
 
 	frame.UnitText = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -424,7 +424,7 @@ function BigAuras:CreateFrame(unit, parent)
 	for k, v in pairs(frameFunctions) do
 		frame[k] = v
 	end
-	
+
 	return frame
 end
 
@@ -439,7 +439,7 @@ function BigAuras:UpateUnit(unit)
 				if spellID ~= nil then
 					local categoryPriority, spellPriority
 					local spellData = GetSpellDataBySpellID(unit, spellID)
-					if spellData then
+					if spellData ~= nil then
 						categoryPriority = spellData.categoryPriority
 						spellPriority = spellData.spellPriority
 					end
@@ -456,17 +456,17 @@ function BigAuras:UpateUnit(unit)
 						}
 
 						if (not hasAura and not frame.showingSpellID)
-							or (hasAura and not frame.showingSpellID)
-							or (frame.showingSpellID and (frame.showingCategoryPriority < categoryPriority or (frame.showingCategoryPriority == categoryPriority and frame.showingSpellPriority < spellPriority)))
-							or (frame.showingSpellID and frame.showingSpellID == spellID and frame.showingSpellExpirationTime > expirationTime)
-							or (frame.showingSpellID and frame.showingCategoryPriority == categoryPriority and frame.showingSpellPriority == spellPriority and frame.showingSpellExpirationTime < expirationTime)
+								or (hasAura and not frame.showingSpellID)
+								or (frame.showingSpellID and (frame.showingCategoryPriority < categoryPriority or (frame.showingCategoryPriority == categoryPriority and frame.showingSpellPriority < spellPriority)))
+								or (frame.showingSpellID and frame.showingSpellID == spellID and frame.showingSpellExpirationTime > expirationTime)
+								or (frame.showingSpellID and frame.showingCategoryPriority == categoryPriority and frame.showingSpellPriority == spellPriority and frame.showingSpellExpirationTime < expirationTime)
 						then
 							frame.showingSpellID = spellID
 							frame.showingSpellPriority = spellPriority
 							frame.showingCategoryPriority = categoryPriority
 							frame.showingSpellDuration = duration
 							frame.showingSpellExpirationTime = expirationTime
-							
+
 							if self.db[unit].unlock or self.db.anchor ~= "Blizzard" then
 								frame.Icon:SetTexture(icon)
 							else
@@ -484,7 +484,7 @@ function BigAuras:UpateUnit(unit)
 				frame.auraTrackerStorage[spellID].status = true
 			else
 				frame.auraTrackerStorage[spellID] = nil
-				
+
 				if frame.showingSpellID == spellID then
 					frame:ClearSpellData()
 					BigAuras:UpateUnit(unit)
@@ -519,7 +519,7 @@ function BigAuras:EnableTestMode(unit)
 			end
 		end
 	else
-		self:GetOrCreate(unit)		
+		self:GetOrCreate(unit)
 		local frame = self.frames[unit]
 		if frame ~= nil then
 			frame:SetTime(GetTime() + 120, 120)
