@@ -316,6 +316,11 @@ function BigAuras:GetOrCreate(unit)
 	local db = self.db[unit]
 	if db ~= nil and db.enable then
 		local parent, portrait = self:GetParent(unit)
+		
+		if string.find(unit, "arenapet") and GetCVar("showArenaEnemyPets") == "0" then
+			parent = UIParent
+		end
+		
 		parent = parent or UIParent
 		
 		if not self.frames[unit] then
