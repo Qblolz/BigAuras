@@ -138,6 +138,8 @@ _CATEGORIES = {
 				[308726] = 1, -- Vulpera stun
 				[90101] = 1,	-- Pandarien stun
 				[30217] = 1,	-- Adamantite Grenade
+					[67769] = { parent = 30217},
+					[67890] = { parent = 30217},
 				[67769] = 1,	-- Cobalt Frag Bomb
 				[30216] = 1,	-- Fel Iron Bomb
 				[20549] = 1,	-- War Stomp
