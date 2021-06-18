@@ -199,8 +199,11 @@ end
 
 function BigAurasOptionProfileSlider_OnValueChanged(self, value, userInput)
     if ( userInput ) then
-        local currentValue = self.isRound and math.ceil(value) or value;
+        local currentValue = self.isRound and math.floor(value+0.5) or value;
         local text = string.format(self.isRound and "%.f" or "%.1f", currentValue);
+		
+		if self:GetValue() == currentValue then return end
+		
         self:SetValue(currentValue);
         if ( self.editBox ) then
             self.editBox:SetText(string.format("%.f", currentValue));
@@ -217,7 +220,7 @@ function BigAurasOptionProfileSlider_Update(self, optionName)
     local currentValue = GetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, optionName or self.optionName, self.valueName) or 1;
     local text = string.format("%.1f", currentValue);
     if ( self.isRound ) then
-        text = string.format("%.f", math.ceil(currentValue))
+        text = string.format("%.f", math.floor(currentValue+0.5))
     end
 	self:SetValue(currentValue);
     self.value:SetText(text);
