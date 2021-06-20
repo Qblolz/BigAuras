@@ -202,7 +202,7 @@ function BigAurasOptionProfileSlider_OnValueChanged(self, value, userInput)
         local currentValue = self.isRound and math.floor(value+0.5) or value;
         local text = string.format(self.isRound and "%.f" or "%.1f", currentValue);
 		
-		if self:GetValue() == currentValue then return end
+	if self:GetValue() == currentValue and self.isRound then return end
 		
         self:SetValue(currentValue);
         if ( self.editBox ) then
