@@ -32,7 +32,7 @@ end
 
 function BigAurasSubOption_OnShow(self)
     local option = self.titleFrame.Enabled
-    local currentValue = GetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, option.unit, option.optionName, option.valueName);
+    local currentValue = GetBigAurasUnitProfileSetting(option.unit, option.optionName, option.valueName);
 
     BigAurasOptionProfileFrame_SetEnabled(currentValue, self:GetChildren())
 end
@@ -69,7 +69,7 @@ end
 
 function BigAurasOptionProfileDropdown_Update(self)
 	UIDropDownMenu_Initialize(self, BigAurasOptionProfileDropdown_Initialize);
-	UIDropDownMenu_SetSelectedValue(self, GetBigAurasUnitProfileMainSetting(BigAurasOption.activeProfile, self.optionName))
+	UIDropDownMenu_SetSelectedValue(self, GetBigAurasUnitProfileMainSetting(self.optionName))
 end
 
 function BigAurasOptionPrfileDropdown_OnShow(self)
@@ -81,7 +81,7 @@ end
 function BigAurasOptionProfileDropdown_Initialize(dropDown)
 	local info = UIDropDownMenu_CreateInfo();
 
-	local currentValue = GetBigAurasUnitProfileMainSetting(BigAurasOption.activeProfile, dropDown.optionName);
+	local currentValue = GetBigAurasUnitProfileMainSetting(dropDown.optionName);
 	for i=1, #dropDown.options do
 		local id = dropDown.options[i];
 		info.text = id;
@@ -97,9 +97,9 @@ end
 function BigAurasOptionProfileDropdownButton_OnClick(button, dropDown)
 	UIDropDownMenu_SetSelectedValue(dropDown, button.value);
 	if (dropDown.optionName == "copyFrom") then
-		CopyBigAurasConfigureFrom(BigAurasOption.activeProfile, button.value, dropDown.unit)
+		CopyBigAurasConfigureFrom(button.value, dropDown.unit)
 	else
-		SetBigAurasUnitProfileMainSetting(BigAurasOption.activeProfile, dropDown.optionName,  button.value);
+		SetBigAurasUnitProfileMainSetting(dropDown.optionName,  button.value);
 	end
 end
 -------------------------------
@@ -211,13 +211,13 @@ function BigAurasOptionProfileSlider_OnValueChanged(self, value, userInput)
         if ( self.value ) then
             self.value:SetText(text);
         end
-        SetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, currentValue, self.optionName, self.valueName)
+        SetBigAurasUnitProfileSetting(self.unit, currentValue, self.optionName, self.valueName)
         BigAuras:GetOrCreate(self.unit)
     end
 end
 
 function BigAurasOptionProfileSlider_Update(self, optionName)
-    local currentValue = GetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, optionName or self.optionName, self.valueName) or 1;
+    local currentValue = GetBigAurasUnitProfileSetting(self.unit, optionName or self.optionName, self.valueName) or 1;
     local text = string.format("%.1f", currentValue);
     if ( self.isRound ) then
         text = string.format("%.f", math.floor(currentValue+0.5))
@@ -257,7 +257,7 @@ function BigAurasOptionProfileCheckButton_InitializeWidget(self, name, optionNam
 end
 
 function BigAurasOptionProfileCheckButton_Update(self, optionName)
-    local currentValue = GetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, optionName or self.optionName, self.valueName);
+    local currentValue = GetBigAurasUnitProfileSetting(self.unit, optionName or self.optionName, self.valueName);
     local setting = self:GetParent():GetParent();
 	self:SetChecked(currentValue == nil or currentValue); -- // ( currentValue == nil ) default is true for spellName, because they are written to the database later
     if ( setting.disableGroup ) then
@@ -309,7 +309,7 @@ function BigAurasOptionProfileCheckButtonUnlock_OnClick(self, button)
     end
     BigAurasOptionProfileFrame_Shown(checked, sizeSlider, xOffSlider, yOffSlider);
     BigAurasOptionProfileCheckButton_SetStatus(self);
-    SetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, checked, self.optionName, self.valueName);
+    SetBigAurasUnitProfileSetting(self.unit, checked, self.optionName, self.valueName);
 end
 
 function BigAurasOptionProfileCheckButton_OnClick(self, button)
@@ -317,7 +317,7 @@ function BigAurasOptionProfileCheckButton_OnClick(self, button)
         local setting = self:GetParent():GetParent();
         setting.disableGroup = not self:GetChecked();
     end
-    SetBigAurasUnitProfileSetting(BigAurasOption.activeProfile, self.unit, self:GetChecked() or false, self.optionName, self.valueName)
+    SetBigAurasUnitProfileSetting(self.unit, self:GetChecked() or false, self.optionName, self.valueName)
     BigAurasOptionProfileCheckButton_SetStatus(self);
     BigAuras:GetOrCreate(self.unit)
 end

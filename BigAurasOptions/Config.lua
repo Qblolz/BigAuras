@@ -403,7 +403,7 @@ function ns:GetCategoryBySpellID(spellID)
 end
 
 function ns:GetPriorityBySpellID(unit, spellID)
-    return GetBigAurasUnitProfileSetting("DEFAULT_PROFILE_NAME", unit, spellID, "value") or 1
+    return GetBigAurasUnitProfileSetting(unit, spellID, "value") or 1
 end
 
 function ns:CreateDefaultProfile()

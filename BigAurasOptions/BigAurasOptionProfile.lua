@@ -1,125 +1,71 @@
 local addon, ns = ...;
 local version = GetAddOnMetadata(addon, "Version");
 local BigAurasOptionProfile = LibStub("AceAddon-3.0"):NewAddon("BigAurasOptionProfile");
+local AceConfig = LibStub("AceConfig-3.0")
+local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local PROFILES;
 local DEFAULT_PROFILE = ns:GetDefaultProfile();
 local _BIG_AURAS_DEFAULT_SPELLS
 
 function BigAurasOptionProfile:OnInitialize()
-	self.db = LibStub("AceDB-3.0"):New("BigAurasOptionDB");
-	PROFILES = self.db.char;
-    BigAurasSubOptionProfile_ValidateProfilesLoaded()
-end
+	self.db = LibStub("AceDB-3.0"):New("BigAurasOptionDB", { profile = DEFAULT_PROFILE });
+	self.db.RegisterCallback(self, "OnProfileChanged", "dbUpdated")
+	self.db.RegisterCallback(self, "OnProfileCopied", "dbUpdated")
+	self.db.RegisterCallback(self, "OnProfileReset", "dbUpdated")
+	PROFILES = self.db.profiles
 
-function GetBigAurasProfileName(index)
-    if ( not PROFILES ) then
-        return 1
-    end
+	-- Profile options
+	local dbOptions = LibStub('AceDBOptions-3.0'):GetOptionsTable(self.db)
+	AceConfig:RegisterOptionsTable('BigAuras-profile', dbOptions)
+	AceConfigDialog:AddToBlizOptions('BigAuras-profile', dbOptions.name, "BIG AURAS")
 
-    return PROFILES[index].name
-end
-
-function BigAurasSubOptionProfile_ValidateProfilesLoaded()
-    if ( #PROFILES == 0 ) then
-        BigAurasSubOptionProfile_ResetToDefaults();
-    end
-	BigAurasSubOptionProfile_ActivateProfile(PROFILES[1]);
-end
-
-function DeleteBigAurasProfile(profile)
-	if ( not PROFILES or not profile ) then
-		return;
-	end
-	if ( type(profile) == "number" ) then
-		table.remove(PROFILES, profile);
-	else
-		for index, profileData in ipairs(PROFILES) do
-			if ( profileData.name == profile ) then
-				table.remove(PROFILES, index);
-				break;
-			end
-		end
-	end
-end
-
-function CopyBigAurasPofile(profile)
-	if ( not PROFILES or not profile ) then
-		return;
-	end
-
-	for _, profileData in ipairs(PROFILES) do
-		if ( profileData.name == profile ) then
-			-- COPY
-			break;
-		end
-	end
-end
-
-function CreateNewBigAurasProfile(name)
-	if ( not PROFILES or not name ) then
-		return;
-	end
-
-	local profile = CopyTable(DEFAULT_PROFILE);
-	profile.name = name;
-	table.insert(PROFILES, profile);
-end
-
-function GetBigAurasProfile()
-	if PROFILES and PROFILES[1] then
-		return PROFILES[1]
-	end
-	
-	return nil
-end
-
-function BigAurasSubOptionProfile_ResetToDefaults()
-	local profiles = {};
-	for i=1, #PROFILES do 
-		tinsert(profiles, GetBigAurasProfileName(i));
-	end
-	for i=1, #profiles do
-		DeleteBigAurasProfile(profiles[i]);
-	end
-	CreateNewBigAurasProfile("DEFAULT_PROFILE_NAME");
-end
-
-function BigAurasSubOptionProfile_ActivateProfile(profile)
-	BigAurasOption.activeProfile = profile.name;
-	BigAurasOption.activeProfileData = profile;
 	BigAurasOptionProfile_UpdateCurrentPanel();
 end
 
-function SetBigAurasUnitProfileSetting(profile, unit, value, optionName, valueName)
-    if not ( profile and unit ) then
+function BigAurasOptionProfile:dbUpdated()
+	BigAurasOptionProfile_UpdateCurrentPanel();
+end
+
+function GetProfileName()
+	return BigAurasOptionProfile.db:GetCurrentProfile()
+end
+
+function GetCurrentProfileData()
+	return BigAurasOptionProfile.db.profile
+end
+
+function SetBigAurasUnitProfileSetting(unit, value, optionName, valueName)
+    if not ( unit ) then
         return;
     end
 
-    for key, profiles in pairs(PROFILES) do
-        if ( profiles.name == profile ) then
-            if ( valueName ) then
-                profiles[unit][optionName] = profiles[unit][optionName] or {}
-                profiles[unit][optionName][valueName] = value;
-            else
-                profiles[unit][optionName] = value;
-            end
-        end
-    end
+	local _db = GetCurrentProfileData()
+
+	if not _db then return end
+
+	if ( valueName ) then
+		_db[unit][optionName] = _db[unit][optionName] or {}
+		_db[unit][optionName][valueName] = value;
+	else
+		_db[unit][optionName] = value;
+	end
 end
 
-function GetBigAurasUnitProfileSetting(profile, unit, optionName, valueName)
-	if not ( PROFILES and profile and unit ) then
+function GetBigAurasUnitProfileSetting(unit, optionName, valueName)
+	if not ( unit ) then
 		return;
 	end
 
-	for key, profiles in pairs(PROFILES) do
-		if ( profiles.name == profile ) then
-			if ( type(profiles[unit][optionName])=="table"  ) then
-				return profiles[unit][optionName][valueName];
-			else
-				return profiles[unit][optionName];
-			end
-		end
+
+
+	local _db = GetCurrentProfileData()
+	if not _db then return end
+
+
+	if ( type(_db[unit][optionName])=="table"  ) then
+		return _db[unit][optionName][valueName];
+	else
+		return _db[unit][optionName];
 	end
 end
 
@@ -151,7 +97,7 @@ function GetSpellDataBySpellID(unit, targetSpellID)
 		return;
 	end
 
-	local profile = BigAurasOption.activeProfileData
+	local profile = GetCurrentProfileData()
 	
 	local _spellData = GetOrCollectSpellIndexData()[targetSpellID]
 	
@@ -187,41 +133,30 @@ function GetSpellDataBySpellID(unit, targetSpellID)
 	return nil
 end
 
-function GetBigAurasUnitProfileMainSetting(profile, optionName)
-	if not ( PROFILES and profile ) then
+function GetBigAurasUnitProfileMainSetting(optionName)
+	if not ( optionName ) then
 		return;
 	end
 
-	for key, profiles in pairs(PROFILES) do
-		if ( profiles.name == profile ) then
-			return profiles[optionName];
-		end
-	end
+	local _db = GetCurrentProfileData()
+	if not _db then return end
+
+	return _db[optionName];
 end
 
-function SetBigAurasUnitProfileMainSetting(profile, optionName, value)
-	if not ( PROFILES and profile ) then
-		return;
-	end
-	
-	for key, profiles in pairs(PROFILES) do
-		if ( profiles.name == profile ) then
-			profiles[optionName] = value;
-		end
-	end
+function SetBigAurasUnitProfileMainSetting(optionName, value)
+	local _db = GetCurrentProfileData()
+	if not _db then return end
+
+	_db[optionName] = value;
 end
 
-function CopyBigAurasConfigureFrom(profile, from, to)
-	if not ( PROFILES and profile ) then
-		return;
-	end
-	
-	for key, profiles in pairs(PROFILES) do
-		if ( profiles.name == profile ) then
-			if profiles[to] ~= nil and profiles[from] ~= nil then
-				profiles[to] = CopyTable(profiles[from])
-			end
-		end
+function CopyBigAurasConfigureFrom(from, to)
+	local _db = GetCurrentProfileData()
+	if not _db then return end
+
+	if _db[to] ~= nil and _db[from] ~= nil then
+		_db[to] = CopyTable(_db[from])
 	end
 	
 	BigAurasOptionProfile_UpdateCurrentPanel()
