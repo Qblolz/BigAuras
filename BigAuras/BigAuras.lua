@@ -309,9 +309,7 @@ function BigAuras:GetParent(unit)
 end
 
 function BigAuras:GetOrCreate(unit)
-	if not self.db then
-		self.db = GetCurrentProfileData()
-	end
+	self.db = GetCurrentProfileData()
 	
 	local db = self.db and self.db[unit] or nil
 	if db ~= nil and db.enable then
