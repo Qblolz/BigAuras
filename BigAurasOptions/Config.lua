@@ -137,6 +137,7 @@ _CATEGORIES = {
 				[46968] = 1,	-- Shockwave
 				[308726] = 1, -- Vulpera stun
 				[90101] = 1,	-- Pandarien stun
+				[316161] = 1,	-- DarkIronDwarf stun
 				[30217] = 1,	-- Adamantite Grenade
 					[67769] = { parent = 30217},
 					[67890] = { parent = 30217},
