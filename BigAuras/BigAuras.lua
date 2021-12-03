@@ -23,6 +23,9 @@ BigAuras.uiAnchors = {
 	["ElvUI"] = {
 		noPortraits = true,
 	},
+	["EasuFrames"] = {
+		noPortraits = false,
+	},
 	["ShadowedUnitFrames"] = {
 		noPortraits = true,
 	},
@@ -260,6 +263,7 @@ local function SetTime(self, expiration, duration)
 
 	if expiration == 0 or duration == 0 then
 		self:SetScript("OnUpdate", nil)
+		self.Text:SetText("");
 		self.Text:Hide()
 	else
 		self.timeLeft = expiration - GetTime()
@@ -276,7 +280,7 @@ local function SetCooldownTime(self, expiration, duration)
 		self.Cooldown:SetFrameLevel(self:GetFrameLevel())
 		self.Cooldown:SetCooldown(expiration - duration, duration)
 	else
-		self.Cooldown:SetCooldown(0, 0)
+		self.Cooldown:Clear()
 		self.Cooldown:Hide()
 		self.Cooldown:SetFrameLevel(self:GetFrameLevel() - 1)
 	end
@@ -470,7 +474,7 @@ function BigAuras:UpateUnit(unit)
 							else
 								SetPortraitToTexture(frame.Icon, icon)
 							end
-							frame:SetTime(expirationTime, duration)
+								frame:SetTime(expirationTime, duration)
 						end
 					end
 				end

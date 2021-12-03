@@ -135,15 +135,15 @@ _CATEGORIES = {
 					[20511] = { parent = 5246 },
 				[12798] = 1,	-- Revenge Stun
 				[46968] = 1,	-- Shockwave
-				[308726] = 1, -- Vulpera stun
-				[90101] = 1,	-- Pandarien stun
+				[316456] = 1, -- Vulpera stun
+				[316443] = 1,	-- Pandarien stun
 				[316161] = 1,	-- DarkIronDwarf stun
 				[30217] = 1,	-- Adamantite Grenade
 					[67769] = { parent = 30217},
 					[67890] = { parent = 30217},
 				[67769] = 1,	-- Cobalt Frag Bomb
 				[30216] = 1,	-- Fel Iron Bomb
-				[20549] = 1,	-- War Stomp
+				[316386] = 1,	-- War Stomp
 				-- Silences
 				[47476] = 1,	-- Strangulate
 				[34490] = 1,	-- Silencing Shot
@@ -155,9 +155,11 @@ _CATEGORIES = {
 				[18425] = 1,	-- Silenced - Improved Kick
 				[24259] = 1,	-- Spell Lock (Felhunter)
 				[18498] = 1,	-- Silenced - Gag Order
-				[25046] = 1,	-- Arcane Torrent (15 energy)
-					[50613] = { parent = 25046 },
-					[28730] = { parent = 25046 },
+				[316421] = 1,	-- Arcane Torrent (15 energy)
+					[302387] = { parent = 316421 },
+					[316418] = { parent = 316421 },
+					[316419] = { parent = 316421 },
+					[316420] = { parent = 316421 },
 				[54785] = 1,  -- Demon Charge
 			}
 		},
@@ -250,6 +252,7 @@ _CATEGORIES = {
 				[29166] = 1, -- Innervate
 				[22842] = 1, -- Frenzied Regeneration
 				[22812] = 1, -- Barkskin
+				[316255] = 1, -- after Meld
 			}
 		},
 		{
@@ -318,12 +321,19 @@ _CATEGORIES = {
 			spells = {
 				[19263] = 1,	-- Deterrenct (Hunter)
 				[46924] = 1,	-- Bladestorm (Warrior)
-				[90113] = 1,	-- Barrier of reflect
 				[48707] = 1,	-- DK Anti-Magic Shell
 				[34692] = 1,	-- The Beast Within (Hunter)
 					[34471] = { parent = 34692 },
 				[31224] = 1,	-- Cloak of Shadows
+				[316243] = 1,	-- Dwarf racial
+				[316271] = 1,	-- Gnome racial
+				[316294] = 1,	-- Hight elf racial
+				[316372] = 1,	-- Orc racial
+				[316405] = 1,	-- Troll racial
+				[316413] = 1,	-- Troll racial
 				[23920] = 1,	-- Warrior reflect
+					[43443] = { parent = 23920 },
+					[59725] = { parent = 23920 },
 			}
 		},
 		{
@@ -379,7 +389,7 @@ _CATEGORIES = {
 				[39965] = 1,	-- Frost Grenade
 				[55536] = 1,	-- Frostweave Net
 				[13099] = 1,	-- Net-o-Matic
-				[308725] = 1,   -- Vulpera root (after 308726 (stun)) - Sirus.su
+				[316455] = 1,   -- Vulpera root (after (stun)) - Sirus.su
 			}
 		},
 	}

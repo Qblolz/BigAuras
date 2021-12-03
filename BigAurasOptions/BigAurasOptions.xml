@@ -768,7 +768,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						BigAurasOptionProfileDropdown_InitializeWidget(self, "anchor", { "Blizzard", "SUF", "X-Perl" });
+						BigAurasOptionProfileDropdown_InitializeWidget(self, "anchor", { "Blizzard", "SUF", "X-Perl", "EasuFrames" });
 					</OnLoad>
 				</Scripts>
 			</Frame>
