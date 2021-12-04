@@ -30,6 +30,7 @@ BigAuras.uiAnchors = {
 		noPortraits = true,
 	},
 }
+BigAuras.testMode = false
 
 BigAuras.anchors = {
 	["player"] = {
@@ -495,7 +496,7 @@ function BigAuras:UpateUnit(unit)
 			end
 		end
 
-		if not frame.showingCategoryPriority then
+		if not frame.showingCategoryPriority and not self.testMode then
 			frame:Hide()
 		end
 	end
@@ -537,6 +538,8 @@ function BigAuras:EnableTestMode(unit)
 			frame.UnitText:SetText(unit)
 		end
 	end
+	
+	self.testMode = true
 end
 
 function BigAuras:DisableTestMode(unit)
@@ -557,4 +560,6 @@ function BigAuras:DisableTestMode(unit)
 			frame.UnitText:Hide()
 		end
 	end
+	
+	self.testMode = false
 end
