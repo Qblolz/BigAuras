@@ -431,6 +431,18 @@ function BigAuras:CreateFrame(unit, parent)
 	return frame
 end
 
+function BigAuras:SupportAddons()
+	if IsAddOnLoaded("sArena") then
+		return sArenaIconStyle()
+	end
+	
+	return false
+end
+
+function BigAuras:isArenaUnit(unit)
+	return unit:find("arena")
+end
+
 local auraFilters = {"HARMFUL", "HELPFUL"}
 function BigAuras:UpateUnit(unit)
 	if (self.db ~= nil and self.db[unit] and self.frames[unit]) then
@@ -473,9 +485,14 @@ function BigAuras:UpateUnit(unit)
 							if self.db[unit].unlock or self.db.anchor ~= "Blizzard" then
 								frame.Icon:SetTexture(icon)
 							else
-								SetPortraitToTexture(frame.Icon, icon)
+								if self:SupportAddons() and self:isArenaUnit(unit) then
+									frame.Icon:SetTexture(icon)
+								else
+									SetPortraitToTexture(frame.Icon, icon)
+								end
 							end
-								frame:SetTime(expirationTime, duration)
+							
+							frame:SetTime(expirationTime, duration)
 						end
 					end
 				end
@@ -513,7 +530,11 @@ function BigAuras:EnableTestMode(unit)
 				if self.db[_unit].unlock or self.db.anchor ~= "Blizzard" then
 					frame.Icon:SetTexture("Interface\\Icons\\inv_jewelry_trinketpvp_01")
 				else
-					SetPortraitToTexture(frame.Icon, "Interface\\Icons\\inv_jewelry_trinketpvp_01")
+					if self:SupportAddons() and self:isArenaUnit(unit) then
+						frame.Icon:SetTexture("Interface\\Icons\\inv_jewelry_trinketpvp_01")
+					else
+						SetPortraitToTexture(frame.Icon, "Interface\\Icons\\inv_jewelry_trinketpvp_01")
+					end
 				end
 
 				frame.UnitText:Show()
@@ -530,7 +551,11 @@ function BigAuras:EnableTestMode(unit)
 			if self.db[unit].unlock or self.db.anchor ~= "Blizzard" then
 				frame.Icon:SetTexture("Interface\\Icons\\inv_jewelry_trinketpvp_01")
 			else
-				SetPortraitToTexture(frame.Icon, "Interface\\Icons\\inv_jewelry_trinketpvp_01")
+				if self:SupportAddons() and self:isArenaUnit(unit) then
+					frame.Icon:SetTexture("Interface\\Icons\\inv_jewelry_trinketpvp_01")
+				else
+					SetPortraitToTexture(frame.Icon, "Interface\\Icons\\inv_jewelry_trinketpvp_01")
+				end
 			end
 
 			frame.UnitText:Show()
