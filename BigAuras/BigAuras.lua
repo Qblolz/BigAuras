@@ -432,7 +432,7 @@ function BigAuras:CreateFrame(unit, parent)
 end
 
 function BigAuras:SupportAddons()
-	if IsAddOnLoaded("sArena") then
+	if IsAddOnLoaded("sArena") and sArenaIconStyle then
 		return sArenaIconStyle()
 	end
 	
