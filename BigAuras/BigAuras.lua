@@ -120,70 +120,70 @@ BigAuras.anchors = {
 	["arena1"] = {
 		["Blizzard"] = "ArenaEnemyFrame1ClassPortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame1ClassPortrait",
 		["ElvUI"] = "ElvUF_Arena1",
 		["ShadowedUnitFrames"] = nil
 	},
 	["arena2"] = {
 		["Blizzard"] = "ArenaEnemyFrame2ClassPortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame2ClassPortrait",
 		["ElvUI"] = "ElvUF_Arena2",
 		["ShadowedUnitFrames"] = nil
 	},
 	["arena3"] = {
 		["Blizzard"] = "ArenaEnemyFrame3ClassPortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame3ClassPortrait",
 		["ElvUI"] = "ElvUF_Arena3",
 		["ShadowedUnitFrames"] = nil
 	},
 	["arena4"] = {
 		["Blizzard"] = "ArenaEnemyFrame4ClassPortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame4ClassPortrait",
 		["ElvUI"] = "ElvUF_Arena4",
 		["ShadowedUnitFrames"] = nil
 	},
 	["arena5"] = {
 		["Blizzard"] = "ArenaEnemyFrame5ClassPortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame5ClassPortrait",
 		["ElvUI"] = "ElvUF_Arena5",
 		["ShadowedUnitFrames"] = nil
 	},
 	["arenapet1"] = {
 		["Blizzard"] = "ArenaEnemyFrame1PetFramePortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame1PetFramePortrait",
 		["ElvUI"] = nil,
 		["ShadowedUnitFrames"] = nil
 	},
 	["arenapet2"] = {
 		["Blizzard"] = "ArenaEnemyFrame2PetFramePortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame2PetFramePortrait",
 		["ElvUI"] = nil,
 		["ShadowedUnitFrames"] = nil
 	},
 	["arenapet3"] = {
 		["Blizzard"] = "ArenaEnemyFrame3PetFramePortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame3PetFramePortrait",
 		["ElvUI"] = nil,
 		["ShadowedUnitFrames"] = nil
 	},
 	["arenapet4"] = {
 		["Blizzard"] = "ArenaEnemyFrame4PetFramePortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame4PetFramePortrait",
 		["ElvUI"] = nil,
 		["ShadowedUnitFrames"] = nil
 	},
 	["arenapet5"] = {
 		["Blizzard"] = "ArenaEnemyFrame5PetFramePortrait",
 		["Perl"] = nil,
-		["XPerl"] = nil,
+		["XPerl"] = "ArenaEnemyFrame5PetFramePortrait",
 		["ElvUI"] = nil,
 		["ShadowedUnitFrames"] = nil
 	}
