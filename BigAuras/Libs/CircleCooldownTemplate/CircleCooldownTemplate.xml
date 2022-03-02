@@ -1,0 +1,83 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+  <Script file="CircleCooldownTemplate.lua"/>
+  <Script file="OmniCCSupport.lua"/>
+
+  <Frame name="CircleCooldownFrameTemplate" hidden="true" virtual="true">
+    <Frames>
+      <Frame parentKey="Cooldown" setAllPoints="true">
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture file="Interface\AddOns\BigAuras\Libs\CircleCooldownTemplate\Cooldown\CircleCooldown" parentKey="texture" setAllPoints="true" />
+          </Layer>
+        </Layers>
+      </Frame>
+
+      <Frame parentKey="Edge" setAllPoints="true" hidden="true">
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture file="Interface\AddOns\BigAuras\Libs\CircleCooldownTemplate\Cooldown\edge" parentKey="texture" setAllPoints="true" />
+          </Layer>
+        </Layers>
+      </Frame>
+
+      <Frame parentKey="Bling" setAllPoints="true" hidden="true">
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture file="Interface\Cooldown\star4" alphaMode="ADD" parentKey="texture" setAllPoints="true" alpha="0">
+              <Color r="0.3" g="0.6" b="1" a="0.8" />
+              <Animations>
+                <AnimationGroup parentKey="Anim">
+                  <Scale parentKey="blingScale" duration="0" scaleX="0.4" scaleY="0.4" order="1" />
+                  <Scale parentKey="blingScale" duration="0.5" scaleX="2.4" scaleY="2.4" order="1" />
+                  <Scale parentKey="blingScale" startDelay="0.5" duration="1" smoothing="IN" scaleX="0.8" scaleY="0.8" order="1" />
+
+                  <Rotation parentKey="blingRotation" duration="1" degrees="-45" smoothing="IN_OUT" order="1" />
+
+                  <Alpha parentKey="blingAlpha" duration="0" change="0.2" order="1" />
+                  <Alpha parentKey="blingAlpha" duration="0.5" smoothing="IN_OUT" change="1" order="1" />
+                  <Alpha parentKey="blingAlpha" startDelay="0.5" duration="1" change="-1" order="1" />
+                  <Scripts>
+                    <OnFinished>
+                      self:GetParent():GetParent().Text:SetAlpha(1);
+                      self:GetParent():GetParent().Edge:SetAlpha(1);
+                      self:GetParent():GetParent().Cooldown:SetAlpha(1);
+                    </OnFinished>
+                  </Scripts>
+                </AnimationGroup>
+              </Animations>
+            </Texture>
+          </Layer>
+        </Layers>
+      </Frame>
+
+      <Frame parentKey="TimerText" hidden="true" setAllPoints="true">
+        <Layers>
+          <Layer level="ARTWORK">
+            <FontString inherits="GameFontNormalHuge" parentKey="text" text="8.8" setAllPoints="true">
+              <Shadow>
+                <Offset x="2" y="-2" />
+                <Color r="0" g="0" b="0" />
+              </Shadow>
+              <Color r="1" g="1" b="0" />
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+
+	  <Frame>
+		<Scripts>
+		  <OnLoad function="CircleCooldownControlFrame_OnLoad" />
+		  <OnUpdate function="CircleCooldownControlFrame_OnUpdate" />
+		</Scripts>
+	  </Frame>
+    </Frames>
+
+	<Attributes>
+		<Attribute name="drawEdge" type="boolean" value="false" />
+		<Attribute name="drawBling" type="boolean" value="true" />
+		<Attribute name="drawSwipe" type="boolean" value="true" />
+		<Attribute name="reverse" type="boolean" value="true" />
+	</Attributes>
+  </Frame>
+</Ui>
