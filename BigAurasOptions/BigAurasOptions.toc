@@ -1,9 +1,0 @@
-## Interface: 30300
-## Title: BigAurasOptions
-## Author: RomanSpector
-## Version: 1.0.3
-## SavedVariables: BigAurasOptionDB
-
-embeds.xml
-load.xml
-BigAurasOptions.xml
