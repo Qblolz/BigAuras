@@ -1,9 +1,0 @@
-## Interface: 30300
-## Title: BigAuras
-## Author: Qblolz
-## Version: 1.00
-## Notes: Displays the duration of CC effects on unit frames
-## SavedVariablesPerCharacter: BigAurasDB
-## Notes: |@Version: 3@|Displays the duration of CC effects on unit frames
-
-BigAuras.lua
