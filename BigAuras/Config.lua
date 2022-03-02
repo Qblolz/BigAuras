@@ -106,7 +106,7 @@ local function loadOptions()
 
                         end
                     end,
-                    width = "0.5",
+                    width = 0.5,
                 },
                 copyFrom = {
                     order = 8,
