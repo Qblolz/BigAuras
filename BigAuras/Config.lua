@@ -62,6 +62,12 @@ local function loadOptions()
             name = unit,
             childGroups = "tab",
             args = {
+				dragNotice = {
+					order = 3,
+					type = "description",
+					fontSize = "medium",
+					name = "Ctrl+Shift+Click to move various elements",
+				},
                 test = {
                     order = 5,
                     type = "execute",
