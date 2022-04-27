@@ -193,8 +193,9 @@ function BigAuras:GetLayouts()
     return _table
 end
 
+local units = {"player","pet","target","focus","party1","party2","party3","party4","partypet1","partypet2","partypet3","partypet4","arena1","arena2","arena3","arena4","arena5","arenapet1","arenapet2","arenapet3","arenapet4","arenapet5"}
 function BigAuras:GetUnits()
-    return {"player","pet","target","focus","party1","party2","party3","party4","partypet1","partypet2","partypet3","partypet4","arena1","arena2","arena3","arena4","arena5","arenapet1","arenapet2","arenapet3","arenapet4","arenapet5"}
+    return units
 end
 
 function BigAuras:Print(msg)
