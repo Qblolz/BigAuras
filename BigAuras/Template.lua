@@ -413,8 +413,8 @@ function BigAuras:getOrCreate(unit)
     end
 
     if frame.db.unlock or parent == UIParent then
-
         frame:ClearAllPoints()
+        frame:SetParent(parent)
         frame:SetScale(1)
         frame:SetPoint("CENTER", frame.db.offsetX, frame.db.offsetY)
         frame:SetSize(frame.db.size, frame.db.size)
