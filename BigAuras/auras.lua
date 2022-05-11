@@ -353,6 +353,7 @@ BigAurasSpells.spells = {
             [9852] = {parent = 53308},
             [9853] = {parent = 53308},
             [26989] = {parent = 53308},
+            [26989] = {parent = 53308},
         [19675] = {category = "roots",priority = 1},	-- Feral Charge Effect (immobilize with interrupt [spell lockout, not silence])
         [48999] = {category = "roots",priority = 1},	-- Counterattack
             [19306] = {parent = 48999},
@@ -363,6 +364,17 @@ BigAurasSpells.spells = {
         [19388] = {category = "roots",priority = 1},	-- Entrapment
             [19184] = {parent = 19388},
             [19387] = {parent = 19388},
+            [64804] = {parent = 19388},
+            [19387] = {parent = 19388},
+            [19184] = {parent = 19388},
+            [19975] = {parent = 19388},
+            [19974] = {parent = 19388},
+            [19973] = {parent = 19388},
+            [19972] = {parent = 19388},
+            [19971] = {parent = 19388},
+            [19970] = {parent = 19388},
+            [27010] = {parent = 19388},
+            [53313] = {parent = 19388},
         [53548] = {category = "roots",priority = 1},	-- Pin (Crab)
             [50245] = {parent = 53548},
             [53544] = {parent = 53548},
