@@ -336,7 +336,6 @@ BigAurasSpells.spells = {
         [308876] = {category = "other", priority = 1}, -- Necrotic trinket(sirus.su)
             [308874] = {parent = 308876},
             [308875] = {parent = 308876},
-            [308876] = {parent = 308876},
             [308877] = {parent = 308876},
             [308878] = {parent = 308876},
             [308879] = {parent = 308876},
