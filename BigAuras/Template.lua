@@ -378,7 +378,7 @@ function BigAuras:getOrCreate(unit)
         return
     end
 
-    local frame = self.frames[unit] or CreateFrame("Frame", nil, parent, "BigAurasIconTemplate")
+    local frame = self.frames[unit] or CreateFrame("Frame", "BigAura_"..unit, parent, "BigAurasIconTemplate")
 
     if not self.frames[unit] then
         self.frames[unit] = frame
