@@ -343,6 +343,10 @@ function BigAuras:OnInitialize()
     for _, unit in pairs(self:GetUnits()) do self.defaults.profile[unit] = CopyTable(_def) end
 
     self.db = LibStub:GetLibrary("AceDB-3.0"):New("BigAurasDB", self.defaults, true)
+	
+	if self.db.profile["minimap"] == nil then
+		self.db.profile = CopyTable(self.defaults.profile)
+	end
 
     for _, unit in pairs(self:GetUnits()) do
         local frame = self:getOrCreate(unit)
