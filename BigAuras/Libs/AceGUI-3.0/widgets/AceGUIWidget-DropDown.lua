@@ -1,4 +1,4 @@
---[[ $Id: AceGUIWidget-DropDown.lua 877 2009-11-02 15:56:50Z nevcairiel $ ]]--
+--[[ $Id: AceGUIWidget-DropDown.lua 916 2010-03-15 12:24:36Z nevcairiel $ ]]--
 local AceGUI = LibStub("AceGUI-3.0")
 
 -- Lua APIs
@@ -7,6 +7,7 @@ local select, pairs, ipairs = select, pairs, ipairs
 local tsort = table.sort
 
 -- WoW APIs
+local PlaySound = PlaySound
 local UIParent, CreateFrame = UIParent, CreateFrame
 local _G = _G
 
@@ -355,7 +356,7 @@ end
 
 do
 	local widgetType = "Dropdown"
-	local widgetVersion = 21
+	local widgetVersion = 22
 	
 	--[[ Static data ]]--
 	
@@ -378,6 +379,7 @@ do
 	
 	local function Dropdown_TogglePullout(this)
 		local self = this.obj
+		PlaySound("igMainMenuOptionCheckBoxOn") -- missleading name, but the Blizzard code uses this sound
 		if self.open then
 			self.open = nil
 			self.pullout:Close()
