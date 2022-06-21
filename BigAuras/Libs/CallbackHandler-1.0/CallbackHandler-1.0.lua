@@ -1,5 +1,5 @@
---[[ $Id: CallbackHandler-1.0.lua 877 2009-11-02 15:56:50Z nevcairiel $ ]]
-local MAJOR, MINOR = "CallbackHandler-1.0", 5
+--[[ $Id: CallbackHandler-1.0.lua 965 2010-08-09 00:47:52Z mikk $ ]]
+local MAJOR, MINOR = "CallbackHandler-1.0", 6
 local CallbackHandler = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not CallbackHandler then return end -- No upgrade needed
@@ -12,8 +12,9 @@ local assert, error, loadstring = assert, error, loadstring
 local setmetatable, rawset, rawget = setmetatable, rawset, rawget
 local next, select, pairs, type, tostring = next, select, pairs, type, tostring
 
--- WoW APIs
-local geterrorhandler = geterrorhandler
+-- Global vars/functions that we don't upvalue since they might get hooked, or upgraded
+-- List them here for Mikk's FindGlobals script
+-- GLOBALS: geterrorhandler
 
 local xpcall = xpcall
 
@@ -146,9 +147,9 @@ function CallbackHandler:New(target, RegisterName, UnregisterName, UnregisterAll
 				regfunc = function(...) self[method](self,...) end
 			end
 		else
-			-- function ref with self=object or self="addonId"
-			if type(self)~="table" and type(self)~="string" then
-				error("Usage: "..RegisterName.."(self or \"addonId\", eventname, method): 'self or addonId': table or string expected.", 2)
+			-- function ref with self=object or self="addonId" or self=thread
+			if type(self)~="table" and type(self)~="string" and type(self)~="thread" then
+				error("Usage: "..RegisterName.."(self or \"addonId\", eventname, method): 'self or addonId': table or string or thread expected.", 2)
 			end
 
 			if select("#",...)>=1 then	-- this is not the same as testing for arg==nil!
