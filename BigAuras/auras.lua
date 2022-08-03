@@ -343,6 +343,7 @@ BigAurasSpells.spells = {
         
         
     --roots
+        [319322] = {category = "roots",priority = 1}, -- Lightforged
         [53148] = {category = "roots",priority = 1},  -- Charge(pets)
         [53308] = {category = "roots",priority = 1},  -- Entangling Roots
             [339] = {parent = 53308},
