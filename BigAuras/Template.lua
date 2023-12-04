@@ -292,11 +292,22 @@ local function PLAYER_TARGET_CHANGED()
         frame:UNIT_AURA("target")
     end
 end
+
 local function PLAYER_FOCUS_CHANGED()
     local frame = BigAuras:getOrCreate("focus")
     if frame then
         frame:UNIT_AURA("focus")
     end
+end
+
+local function PLAYER_ENTERING_WORLD(self)
+    self.Icon:SetTexture(nil)
+    self.auraTrackerStorage = {}
+    self.showingSpellID = nil
+    self.showingSpellPriority = nil
+    self.showingCategoryPriority = nil
+    self.showingSpellDuration = nil
+    self.showingSpellExpirationTime = nil
 end
 
 local function SetCooldownTime(self, expiration, duration)
@@ -351,6 +362,7 @@ function BigAuras:OnInitialize()
     for _, unit in pairs(self:GetUnits()) do
         local frame = self:getOrCreate(unit)
         if frame then
+            frame.PLAYER_ENTERING_WORLD = PLAYER_ENTERING_WORLD
             if unit == "target" then
                 frame:RegisterEvent("PLAYER_TARGET_CHANGED")
                 frame.PLAYER_TARGET_CHANGED = PLAYER_TARGET_CHANGED
