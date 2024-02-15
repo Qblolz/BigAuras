@@ -385,7 +385,9 @@ function BigAuras:getOrCreate(unit)
     if self:IsGladdyLoaded() then
         parent = _G['GladdyAura_' .. unit]
         portrait = nil
-        parentForExecPosition = parent.frame
+        if parent then
+            parentForExecPosition = parent.frame
+        end
     else
         parent, portrait = self:GetParent(unit)
 
