@@ -360,7 +360,15 @@ function BigAuras:OnInitialize()
 	end
 
     for _, unit in pairs(self:GetUnits()) do
-        local frame = self:getOrCreate(unit)
+        local frame
+        if self:isArenaUnit(unit) then
+            C_Timer:After(0.1,function()
+                frame = BigAuras:getOrCreate(unit)
+            end)
+        else
+            frame = self:getOrCreate(unit)
+        end
+
         if frame then
             frame.PLAYER_ENTERING_WORLD = PLAYER_ENTERING_WORLD
             if unit == "target" then
