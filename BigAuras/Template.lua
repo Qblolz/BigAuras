@@ -382,7 +382,7 @@ function BigAuras:getOrCreate(unit)
     local parent, portrait
     local parentForExecPosition
 
-    if self:IsGladdyLoaded() then
+    if self:IsGladdyLoaded() and self:isArenaUnit(unit) then
         parent = _G['GladdyAura_' .. unit]
         portrait = nil
         if parent then
