@@ -85,7 +85,7 @@ local function loadOptions()
                             local texturePath = UnitFactionGroup('player') == "Horde" and "Interface\\Icons\\inv_jewelry_trinketpvp_02" or "Interface\\Icons\\inv_jewelry_trinketpvp_01"
 
                             if not frame.testMode then
-                                if frame.db.unlock then
+                                if frame.db.unlock or (BigAuras:isArenaUnit(unit) and (BigAuras:support_s_Arena() or BigAuras:IsGladdyLoaded())) then
                                     frame.Icon:SetTexture(texturePath)
                                 else
                                     SetPortraitToTexture(frame.Icon, texturePath)
