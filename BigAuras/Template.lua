@@ -249,7 +249,7 @@ local function DETECT_UNIT_AURA(self, unit)
                         if frame.db.unlock or BigAuras.db.profile.anchor ~= "Blizzard" then
                             frame.Icon:SetTexture(icon)
                         else
-                            if BigAuras:support_s_Arena() and BigAuras:isArenaUnit(unit) then
+                            if (BigAuras:support_s_Arena() or BigAuras:IsGladdyLoaded()) and BigAuras:isArenaUnit(unit) then
                                 frame.Icon:SetTexture(icon)
                             else
                                 SetPortraitToTexture(frame.Icon, icon)
@@ -379,11 +379,19 @@ function BigAuras:getOrCreate(unit)
         return
     end
 
-    -- init
-    local parent, portrait = self:GetParent(unit)
+    local parent, portrait
+    local parentForExecPosition
 
-    if self.db.profile[unit].unlock then
-        parent = UIParent
+    if self:IsGladdyLoaded() then
+        parent = _G['GladdyAura_' .. unit]
+        portrait = nil
+        parentForExecPosition = parent.frame
+    else
+        parent, portrait = self:GetParent(unit)
+
+        if self.db.profile[unit].unlock then
+            parent = UIParent
+        end
     end
 
     if parent == nil then
@@ -455,12 +463,21 @@ function BigAuras:getOrCreate(unit)
             frame.Cooldown:SetPoint("TOPLEFT", portrait, 3, -3)
             frame.Cooldown:SetPoint("BOTTOMRIGHT", portrait, -3, 3)
         else
-            frame:SetFrameLevel(parent:GetFrameLevel() + 10)
-            frame:SetScale(parent:GetScale())
-            frame:SetAllPoints(parent)
+            if parentForExecPosition then
+                frame:SetFrameLevel(parentForExecPosition:GetFrameLevel() + 10)
+                frame:SetScale(parentForExecPosition:GetScale())
+                frame:SetAllPoints(parentForExecPosition)
 
-            frame.Cooldown:SetAllPoints(parent)
-            frame.CircuitCooldown.SetAllPoints(parent)
+                frame.Cooldown:SetAllPoints(parentForExecPosition)
+                frame.CircuitCooldown.SetAllPoints(parentForExecPosition)
+            else
+                frame:SetFrameLevel(parent:GetFrameLevel() + 10)
+                frame:SetScale(parent:GetScale())
+                frame:SetAllPoints(parent)
+
+                frame.Cooldown:SetAllPoints(parent)
+                frame.CircuitCooldown.SetAllPoints(parent)
+            end
         end
     end
 
@@ -621,4 +638,12 @@ end
 
 function BigAuras:isArenaUnit(unit)
     return unit:find("arena")
+end
+
+function BigAuras:IsGladdyLoaded()
+    if IsAddOnLoaded("Gladdy") then
+        return true
+    end
+
+    return nil
 end
