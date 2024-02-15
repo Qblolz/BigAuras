@@ -44,7 +44,7 @@ local function loadOptions()
     for _, unit in ipairs(BigAuras:GetUnits()) do
         local UpdateSettings = function(info, val)
             if InCombatLockdown() then
-                print(addonName .. ": Must leave combat to do that.")
+                --print(addonName .. ": Must leave combat to do that.")
                 return
             end
 
@@ -75,7 +75,7 @@ local function loadOptions()
                     func = function()
                         local _, instanceType = IsInInstance()
                         if InCombatLockdown() or instanceType == "arena" then
-                            print(addonName .. ": Must leave combat and arena to do that.")
+                            --print(addonName .. ": Must leave combat and arena to do that.")
                         else
                             local frame = BigAuras:getOrCreate(unit)
 
