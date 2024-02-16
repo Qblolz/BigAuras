@@ -338,6 +338,29 @@ local function SetCircuitCooldownTime(self, expiration, duration)
     end
 end
 
+local function UPDATE_BATTLEFIELD_STATUS(_, index)
+    local status, _, _, _, _, teamSize, _, _, _, _ = GetBattlefieldStatus(index)
+    local instanceType = select(2, IsInInstance())
+    if ((instanceType == "arena" or GetNumArenaOpponents() > 0) and status == "active") then
+        if ( teamSize > 0 ) then
+            for _, unit in pairs(BigAuras:GetUnits()) do
+                local frame = BigAuras:getOrCreate(unit)
+
+                if frame then
+                    frame.PLAYER_ENTERING_WORLD = PLAYER_ENTERING_WORLD
+                    if unit == "target" then
+                        frame:RegisterEvent("PLAYER_TARGET_CHANGED")
+                        frame.PLAYER_TARGET_CHANGED = PLAYER_TARGET_CHANGED
+                    elseif unit == "focus" then
+                        frame:RegisterEvent("PLAYER_FOCUS_CHANGED")
+                        frame.PLAYER_FOCUS_CHANGED = PLAYER_FOCUS_CHANGED
+                    end
+                end
+            end
+        end
+    end
+end
+
 function BigAuras:OnInitialize()
     local _def = {
         enable = true,
@@ -360,14 +383,7 @@ function BigAuras:OnInitialize()
 	end
 
     for _, unit in pairs(self:GetUnits()) do
-        local frame
-        if self:isArenaUnit(unit) then
-            C_Timer:After(0.1,function()
-                frame = BigAuras:getOrCreate(unit)
-            end)
-        else
-            frame = self:getOrCreate(unit)
-        end
+        local frame = self:getOrCreate(unit)
 
         if frame then
             frame.PLAYER_ENTERING_WORLD = PLAYER_ENTERING_WORLD
@@ -657,3 +673,10 @@ function BigAuras:IsGladdyLoaded()
 
     return nil
 end
+
+BigAuras.events = CreateFrame("Frame")
+BigAuras.events:RegisterEvent("UPDATE_BATTLEFIELD_STATUS")
+BigAuras.events.UPDATE_BATTLEFIELD_STATUS = UPDATE_BATTLEFIELD_STATUS
+BigAuras.events:SetScript("OnEvent", function(_self, _event, ...)
+    _self[_event](_self, ...)
+end)
