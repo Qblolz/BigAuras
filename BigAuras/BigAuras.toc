@@ -2,9 +2,10 @@
 ## Title: BigAuras
 ## Author: Qblolz
 ## Notes: |@Version: 4@|
-## Version: 1.0.11
+## Version: 1.0.14
 ## SavedVariables: BigAurasDB
 ## OptionalDeps: OmniCC, sArena, Blizzard_ArenaUI
+## X-Sirus-Update: https://github.com/Qblolz/BigAuras/tree/master/BigAuras
 
 embeds.xml
 load.xml
