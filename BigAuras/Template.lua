@@ -511,7 +511,14 @@ function BigAuras:getOrCreate(unit)
     frame.CircuitCooldown:Hide()
     frame.SetTime = SetCooldownTime
 
-    if (self.db.profile.anchor == "Blizzard" and not frame.db.unlock) or (frame.db.unlock and not frame.db.showSwipe) then
+    if
+        (
+            self.db.profile.anchor == "Blizzard" and
+            not frame.db.unlock and
+            not self:support_s_Arena()
+        ) or
+        (frame.db.unlock and not frame.db.showSwipe)
+    then
         frame.Cooldown:Hide()
         frame.CircuitCooldown:Show()
         frame.CircuitCooldown:SetDrawSwipe(frame.db.showSwipe)
@@ -670,13 +677,34 @@ function BigAuras:IsGladdyLoaded()
     if IsAddOnLoaded("Gladdy") then
         return true
     end
-
+    
     return nil
+end
+
+local function HIDE_UNUSED()
+    for index, _frame in pairs(BigAuras.frames) do
+        if not UnitExists(_frame.unit) then
+            _frame:Hide()
+            _frame.Icon:SetTexture(nil)
+            _frame.auraTrackerStorage = {}
+            _frame.showingSpellID = nil
+            _frame.showingSpellPriority = nil
+            _frame.showingCategoryPriority = nil
+            _frame.showingSpellDuration = nil
+            _frame.showingSpellExpirationTime = nil
+        end
+    end
 end
 
 BigAuras.events = CreateFrame("Frame")
 BigAuras.events:RegisterEvent("UPDATE_BATTLEFIELD_STATUS")
+BigAuras.events:RegisterEvent("PLAYER_ENTERING_WORLD")
+BigAuras.events:RegisterEvent("PARTY_MEMBERS_CHANGED")
+BigAuras.events:RegisterEvent("GROUP_JOINED")
 BigAuras.events.UPDATE_BATTLEFIELD_STATUS = UPDATE_BATTLEFIELD_STATUS
+BigAuras.events.PLAYER_ENTERING_WORLD = HIDE_UNUSED
+BigAuras.events.PARTY_MEMBERS_CHANGED = HIDE_UNUSED
+BigAuras.events.GROUP_JOINED = HIDE_UNUSED
 BigAuras.events:SetScript("OnEvent", function(_self, _event, ...)
     _self[_event](_self, ...)
 end)
