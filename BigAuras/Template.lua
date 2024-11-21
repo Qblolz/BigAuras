@@ -481,13 +481,23 @@ function BigAuras:getOrCreate(unit)
             frame:SetScale(parent:GetScale())
             frame:SetAllPoints(portrait)
 
-            frame.CircuitCooldown:ClearAllPoints()
-            frame.CircuitCooldown:SetPoint("TOPLEFT", portrait, 3, -3)
-            frame.CircuitCooldown:SetPoint("BOTTOMRIGHT", portrait, -3, 3)
+            if (self:support_s_Arena()) then
+                frame.CircuitCooldown:ClearAllPoints()
+                frame.CircuitCooldown:SetPoint("TOPLEFT", portrait, 0, 0)
+                frame.CircuitCooldown:SetPoint("BOTTOMRIGHT", portrait, 0, 0)
 
-            frame.Cooldown:ClearAllPoints()
-            frame.Cooldown:SetPoint("TOPLEFT", portrait, 3, -3)
-            frame.Cooldown:SetPoint("BOTTOMRIGHT", portrait, -3, 3)
+                frame.Cooldown:ClearAllPoints()
+                frame.Cooldown:SetPoint("TOPLEFT", portrait, 0, 0)
+                frame.Cooldown:SetPoint("BOTTOMRIGHT", portrait, 0, 0)
+            else
+                frame.CircuitCooldown:ClearAllPoints()
+                frame.CircuitCooldown:SetPoint("TOPLEFT", portrait, 3, -3)
+                frame.CircuitCooldown:SetPoint("BOTTOMRIGHT", portrait, -3, 3)
+
+                frame.Cooldown:ClearAllPoints()
+                frame.Cooldown:SetPoint("TOPLEFT", portrait, 3, -3)
+                frame.Cooldown:SetPoint("BOTTOMRIGHT", portrait, -3, 3)
+            end
         else
             if parentForExecPosition then
                 frame:SetFrameLevel(parentForExecPosition:GetFrameLevel() + 10)
@@ -677,7 +687,7 @@ function BigAuras:IsGladdyLoaded()
     if IsAddOnLoaded("Gladdy") then
         return true
     end
-    
+
     return nil
 end
 
