@@ -481,7 +481,7 @@ function BigAuras:getOrCreate(unit)
             frame:SetScale(parent:GetScale())
             frame:SetAllPoints(portrait)
 
-            if (self:support_s_Arena()) then
+            if (self:support_s_Arena() and self:isArenaUnit(frame.unit)) then
                 frame.CircuitCooldown:ClearAllPoints()
                 frame.CircuitCooldown:SetPoint("TOPLEFT", portrait, 0, 0)
                 frame.CircuitCooldown:SetPoint("BOTTOMRIGHT", portrait, 0, 0)
@@ -524,16 +524,18 @@ function BigAuras:getOrCreate(unit)
     if
         (
             self.db.profile.anchor == "Blizzard" and
-            not frame.db.unlock and
-            self:support_s_Arena() and
-            not self:isArenaUnit(frame.unit)
+            not frame.db.unlock
         ) or
         (frame.db.unlock and not frame.db.showSwipe)
     then
-        frame.Cooldown:Hide()
-        frame.CircuitCooldown:Show()
-        frame.CircuitCooldown:SetDrawSwipe(frame.db.showSwipe)
-        frame.SetTime = SetCircuitCooldownTime
+        if self:isArenaUnit(frame.unit) and not self:support_s_Arena() then
+            --dump
+        else
+            frame.Cooldown:Hide()
+            frame.CircuitCooldown:Show()
+            frame.CircuitCooldown:SetDrawSwipe(frame.db.showSwipe)
+            frame.SetTime = SetCircuitCooldownTime
+        end
     end
 
     if not frame.testMode then
