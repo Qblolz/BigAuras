@@ -525,7 +525,8 @@ function BigAuras:getOrCreate(unit)
         (
             self.db.profile.anchor == "Blizzard" and
             not frame.db.unlock and
-            not self:support_s_Arena()
+            self:support_s_Arena() and
+            not self:isArenaUnit(frame.unit)
         ) or
         (frame.db.unlock and not frame.db.showSwipe)
     then
