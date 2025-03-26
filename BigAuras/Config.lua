@@ -105,9 +105,13 @@ local function loadOptions()
 
                             if frame.db.unlock and frame.testMode then
                                 frame:SetMovable(true)
+                                frame:EnableMouse(true)
+                                frame:EnableMouseWheel(true)
                                 BigAuras:SetupDrag(frame, frame)
                             else
                                 frame:SetMovable(false)
+                                frame:EnableMouse(false)
+                                frame:EnableMouseWheel(false)
                             end
 
                         end
