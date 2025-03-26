@@ -257,6 +257,9 @@ local function DETECT_UNIT_AURA(self, unit)
                         end
 
                         frame:SetTime(expirationTime, duration)
+                        frame:SetMovable(false)
+                        frame:EnableMouse(false)
+                        frame:EnableMouseWheel(false)
                     end
                 end
             end
@@ -472,6 +475,7 @@ function BigAuras:getOrCreate(unit)
 
         frame.CircuitCooldown:SetAllPoints()
         frame.Cooldown:SetAllPoints()
+        frame:SetFrameLevel(100)
     else
         frame:SetAlpha(frame.db.alpha)
         if portrait and self.db.profile.anchor == "Blizzard" then
