@@ -73,18 +73,22 @@ function CircleCooldownFrame_SetCooldown(self, start, duration, modRate)
     end
 end
 
-function Mixin(object, ...)
-	for i = 1, select("#", ...) do
-		local mixin = select(i, ...);
-		for k, v in pairs(mixin) do
-			object[k] = v;
+if not Mixin then
+	function Mixin(object, ...)
+		for i = 1, select("#", ...) do
+			local mixin = select(i, ...);
+			for k, v in pairs(mixin) do
+				object[k] = v;
+			end
 		end
+		return object;
 	end
-	return object;
 end
 
-function CreateFromMixins(...)
-	return Mixin({}, ...);
+if not CreateFromMixins then
+	function CreateFromMixins(...)
+		return Mixin({}, ...);
+	end
 end
 
 local function WrapTextInColorCode(text, colorHexString)
