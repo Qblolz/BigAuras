@@ -51,6 +51,7 @@ BigAurasSpells.spells = {
         [23920] = {category = "immunity",priority = 1},
             [43443] = {parent = 23920},
             [59725] = {parent = 23920},
+        [374992] = {category = "immunity",priority = 1}, -- fear immunity
 
 
     --crowdControl
@@ -176,9 +177,6 @@ BigAurasSpells.spells = {
             [20511] = {parent = 5246},
         [12798]= {category = "crowdControl",priority = 1},	-- Revenge Stun
         [46968]= {category = "crowdControl",priority = 1},	-- Shockwave
-        [316456]= {category = "crowdControl",priority = 1}, -- Vulpera stun
-        [316443]= {category = "crowdControl",priority = 1},	-- Pandarien stun
-        [316161]= {category = "crowdControl",priority = 1},	-- DarkIronDwarf stun
         [30217]= {category = "crowdControl",priority = 1},	-- Adamantite Grenade
             [67769] = {parent = 30217},
             [67890] = {parent = 30217},
@@ -196,13 +194,16 @@ BigAurasSpells.spells = {
         [18425]= {category = "crowdControl",priority = 1},	-- Silenced - Improved Kick
         [24259]= {category = "crowdControl",priority = 1},	-- Spell Lock (Felhunter)
         [18498]= {category = "crowdControl",priority = 1},	-- Silenced - Gag Order
-        [316421]= {category = "crowdControl",priority = 1},	-- Arcane Torrent (15 energy)
+        [54785]= {category = "crowdControl",priority = 1},  -- Demon Charge
+        [375039]= {category = "crowdControl",priority = 1},	-- stun
+        [374994]= {category = "crowdControl",priority = 1},	-- stun
+        [375010]= {category = "crowdControl",priority = 1},	-- stun
+        [316421]= {category = "crowdControl",priority = 1},	-- Arcane Torrent
             [302387] = {parent = 316421},
             [316418] = {parent = 316421},
             [316419] = {parent = 316421},
             [316420] = {parent = 316421},
-        [54785]= {category = "crowdControl",priority = 1},  -- Demon Charge
-
+            [375001] = {parent = 316421},
 
     --defensive
         [66] = {category = "defensive",priority = 1},    -- Invisibility(mage)
@@ -290,7 +291,11 @@ BigAurasSpells.spells = {
         [29166] = {category = "defensive",priority = 1}, -- Innervate
         [22842] = {category = "defensive",priority = 1}, -- Frenzied Regeneration
         [22812] = {category = "defensive",priority = 1}, -- Barkskin
-        [316255] = {category = "defensive",priority = 1}, -- after Meld
+        [374997] = {category = "defensive",priority = 1}, -- Magic shield
+        [375020] = {category = "defensive",priority = 1}, -- heal
+        [374999] = {category = "defensive",priority = 1}, -- ?
+        [375016] = {category = "defensive",priority = 1}, -- ?
+        [375019] = {category = "defensive",priority = 1}, -- slow reduce
 
 
     --offensive
@@ -330,9 +335,18 @@ BigAurasSpells.spells = {
         [64058] = {category = "offensive",priority = 1}, -- Psychic Horror disarm
         [51722] = {category = "offensive",priority = 1}, -- Dismantle
         [676]   = {category = "offensive",priority = 1}, -- Disarm
+        [375013] = {category = "offensive",priority = 1}, -- Crit chance
+        [375006] = {category = "offensive",priority = 1}, -- reduce heal/damage
+        [374988] = {category = "offensive",priority = 1}, -- damage
+        [375029] = {category = "offensive",priority = 1}, -- damage
+        [374996] = {category = "offensive",priority = 1}, -- haste
 
 
     --other
+        [375022] = {category = "other", priority = 1}, -- mayak
+        [375026] = {category = "other", priority = 1}, -- mayak
+        [375038] = {category = "other", priority = 1}, -- slow
+        [375024] = {category = "other", priority = 1}, -- stealth detect
         [308876] = {category = "other", priority = 1}, -- Necrotic trinket(sirus.su)
             [308874] = {parent = 308876},
             [308875] = {parent = 308876},
