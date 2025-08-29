@@ -348,8 +348,8 @@ local function UPDATE_BATTLEFIELD_STATUS(_, index)
         if ( teamSize > 0 ) then
             for _, unit in pairs(BigAuras:GetUnits()) do
                 local frame = BigAuras:getOrCreate(unit)
-				frame.PLAYER_ENTERING_WORLD = PLAYER_ENTERING_WORLD
                 if frame then
+					frame.PLAYER_ENTERING_WORLD = PLAYER_ENTERING_WORLD
                     if unit == "target" then
                         frame:RegisterEvent("PLAYER_TARGET_CHANGED")
                         frame.PLAYER_TARGET_CHANGED = PLAYER_TARGET_CHANGED
@@ -724,5 +724,6 @@ BigAuras.events.GROUP_JOINED = HIDE_UNUSED
 BigAuras.events:SetScript("OnEvent", function(_self, _event, ...)
     _self[_event](_self, ...)
 end)
+
 
 
