@@ -1,0 +1,8 @@
+## Interface: 30300
+## LoadOnDemand: 1
+## Title: CircleCooldownFrameTemplate
+## Author: RomanSpector & Atom
+## Version: 1.0
+## OptionalDeps: OmniCC
+
+CircleCooldownTemplate.xml
