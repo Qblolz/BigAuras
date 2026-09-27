@@ -1,0 +1,116 @@
+name: release
+
+on:
+  push:
+    branches: ["**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Detect layout and read version from .toc
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="${GITHUB_REPOSITORY#*/}"
+          root_toc="$(ls -1 *.toc 2>/dev/null | head -n1 || true)"
+
+          if [ -n "$root_toc" ]; then
+            mode="flat"
+            primary_dir="${root_toc%.toc}"
+            primary_toc="$root_toc"
+          else
+            mode="tree"
+            pk_dirs=()
+            for d in */ ; do
+              d="${d%/}"
+              [ "$d" = ".git" ] && continue
+              [ "$d" = ".github" ] && continue
+              if find "$d" -name '*.toc' -print -quit 2>/dev/null | grep -q .; then
+                pk_dirs+=("$d")
+              fi
+            done
+            if [ "${#pk_dirs[@]}" -eq 0 ]; then
+              echo "::error::No .toc found at root or in subfolders"
+              exit 1
+            fi
+            primary_dir=""
+            low_repo="$(echo "$repo" | tr '[:upper:]' '[:lower:]')"
+            for d in "${pk_dirs[@]}"; do
+              if [ "$(echo "$d" | tr '[:upper:]' '[:lower:]')" = "$low_repo" ]; then
+                primary_dir="$d"; break
+              fi
+            done
+            [ -z "$primary_dir" ] && primary_dir="${pk_dirs[0]}"
+            if [ -f "$primary_dir/$primary_dir.toc" ]; then
+              primary_toc="$primary_dir/$primary_dir.toc"
+            else
+              primary_toc="$(find "$primary_dir" -maxdepth 1 -name '*.toc' | head -n1)"
+            fi
+          fi
+
+          ver="$(grep -iE '^[[:space:]]*##[[:space:]]*Version:[[:space:]]*' "$primary_toc" | head -n1 | sed -E 's/^[[:space:]]*##[[:space:]]*Version:[[:space:]]*//' | tr -d '\r' | sed -E 's/[[:space:]]+$//')"
+          [ -z "$ver" ] && ver="0.0.0"
+          ver="${ver#v}"
+          ver="${ver#V}"
+          ver="$(echo "$ver" | sed -E 's/[^A-Za-z0-9._-]+/-/g; s/^[-.]+//; s/[-.]+$//')"
+          bslug="$(echo "${GITHUB_REF_NAME}" | sed -E 's/[^A-Za-z0-9._-]+/-/g; s/^[-.]+//; s/[-.]+$//')"
+          tag="${bslug}-v${ver}"
+          dirs="$(IFS=,; echo "${pk_dirs[*]:-}")"
+          {
+            echo "mode=$mode"
+            echo "primary_dir=$primary_dir"
+            echo "primary_toc=$primary_toc"
+            echo "version=$ver"
+            echo "tag=$tag"
+            echo "dirs=$dirs"
+          } >> "$GITHUB_OUTPUT"
+          echo "mode=$mode primary_dir=$primary_dir primary_toc=$primary_toc version=$ver tag=$tag dirs=$dirs"
+
+      - name: Package addon(s) into archive
+        id: pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          mode="${{ steps.meta.outputs.mode }}"
+          primary_dir="${{ steps.meta.outputs.primary_dir }}"
+          version="${{ steps.meta.outputs.version }}"
+          out="$(mktemp -d)"
+          if [ "$mode" = "flat" ]; then
+            mkdir -p "$out/${primary_dir}"
+            tar --exclude='./.git' --exclude='./.github' --exclude='./.gitignore' --exclude='./.gitattributes' -cf - . | ( cd "$out/${primary_dir}" && tar -xf - )
+            ( cd "$out" && zip -qr "${primary_dir}-${version}.zip" "${primary_dir}" )
+          else
+            IFS=',' read -r -a darr <<< "${{ steps.meta.outputs.dirs }}"
+            for d in "${darr[@]}"; do
+              [ -n "$d" ] && cp -r "$d" "$out/"
+            done
+            ( cd "$out" && zip -qr "${primary_dir}-${version}.zip" "${darr[@]}" )
+          fi
+          echo "asset=$out/${primary_dir}-${version}.zip" >> "$GITHUB_OUTPUT"
+          unzip -l "$out/${primary_dir}-${version}.zip" | head -n 20
+
+      - name: Create or update release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.meta.outputs.tag }}"
+          primary_dir="${{ steps.meta.outputs.primary_dir }}"
+          asset="${{ steps.pack.outputs.asset }}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" "$asset" --clobber
+          else
+            gh release create "$tag" "$asset" \
+              --target "$GITHUB_SHA" \
+              --title "${primary_dir} ${tag}" \
+              --generate-notes
+          fi
