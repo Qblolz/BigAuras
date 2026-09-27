@@ -1,0 +1,39 @@
+<Ui>
+    <Frame name="BigAurasIconTemplate" enablemouse="true" movable="true" virtual="true">
+        <Layers>
+            <Layer level="BORDER">
+                <Texture parentKey="Icon" setAllPoints="true"/>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString inherits="GameFontNormalLarge" parentKey="UnitText">
+                    <Color r="1" g="1" b="1" a="1"/>
+                    <Anchors>
+                        <Anchor point="BOTTOM" relativePoint="TOP">
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Cooldown parentKey="Cooldown" inherits="CooldownFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="3" y="-3"/>
+                    <Anchor point="BOTTOMRIGHT" x="-3" y="3"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        for _, region in next, { self:GetRegions() } do
+                        if region:GetObjectType() == "FontString" then
+                        self.text = region
+                        self.text.fontFile = region:GetFont()
+                        end
+                        end
+                    </OnLoad>
+                </Scripts>
+            </Cooldown>
+        </Frames>
+    </Frame>
+    <Script file="auras.lua"/>
+    <Script file="Template.lua"/>
+    <Script file="Config.lua"/>
+</Ui>
